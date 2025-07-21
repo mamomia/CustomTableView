@@ -28,22 +28,22 @@ import android.view.View.OnFocusChangeListener
 import android.widget.EditText
 import android.widget.LinearLayout
 import com.mushi.customtableview.R
-import com.mushi.customtableview.model.TableCell
+import com.mushi.customtableview.model.Cell
 import com.mushi.customtableview.adapter.recyclerview.holder.AbstractViewHolder
 import com.mushi.customtableview.util.CustomTextWatcher
 
 
 /**
- * Created by evrencoskun on 23/10/2017.
+ * Created by Mushi on 23/10/2017.
  */
 class EditableCellViewHolder(itemView: View) : AbstractViewHolder(itemView) {
     public val cellText: EditText = itemView.findViewById(R.id.cell_data)
     private val cellContainer: LinearLayout = itemView.findViewById(R.id.cell_container)
 
-    fun setCell(tableCell: TableCell?, watcher: CustomTextWatcher?) {
+    fun setCell(tableCell: Cell?, watcher: CustomTextWatcher?) {
         cellText.setRawInputType(tableCell!!.inputType)
         cellText.setText(tableCell.data.toString())
-        
+
         // If your TableView should have auto resize for cells & columns.
         // Then you should consider the below lines. Otherwise, you can ignore them.
 
@@ -58,10 +58,10 @@ class EditableCellViewHolder(itemView: View) : AbstractViewHolder(itemView) {
                 } else {
                     cellText.removeTextChangedListener(watcher)
                 }
-                tableCell.isInFocus = hasFocus
+                tableCell.inFocus = hasFocus
             }
 
-        if (tableCell.isInFocus) {
+        if (tableCell.inFocus) {
             cellText.requestFocus()
             cellText.setSelection(tableCell.cursorPoint)
         }

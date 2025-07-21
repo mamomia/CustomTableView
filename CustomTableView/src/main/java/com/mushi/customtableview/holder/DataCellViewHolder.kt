@@ -21,44 +21,32 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+package com.mushi.customtableview.holder
 
-package com.mushi.customtableview.holder;
-
-import android.view.View;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
-import com.mushi.customtableview.R;
-import com.mushi.customtableview.model.TableCell;
-import com.mushi.customtableview.adapter.recyclerview.holder.AbstractViewHolder;
+import android.view.View
+import android.widget.LinearLayout
+import android.widget.TextView
+import com.mushi.customtableview.R
+import com.mushi.customtableview.adapter.recyclerview.holder.AbstractViewHolder
+import com.mushi.customtableview.model.Cell
 
 /**
- * Created by evrencoskun on 23/10/2017.
+ * Created by Mushi on 23/10/2017.
  */
+class DataCellViewHolder(itemView: View) : AbstractViewHolder(itemView) {
+    private val cell_text: TextView =
+        itemView.findViewById(R.id.cell_data)
+    private val cell_container: LinearLayout =
+        itemView.findViewById(R.id.cell_container)
 
-public class DataCellViewHolder extends AbstractViewHolder {
-    @NonNull
-    private final TextView cell_text;
-    @NonNull
-    private final LinearLayout cell_container;
-
-    public DataCellViewHolder(@NonNull View itemView) {
-        super(itemView);
-        cell_text = itemView.findViewById(R.id.cell_data);
-        cell_container = itemView.findViewById(R.id.cell_container);
-    }
-
-    public void setCell(@Nullable TableCell tableCell) {
-        cell_text.setText(String.valueOf(tableCell.getData()));
+    fun setCell(tableCell: Cell?) {
+        cell_text.text = tableCell!!.data.toString()
 
         // If your TableView should have auto resize for cells & columns.
         // Then you should consider the below lines. Otherwise, you can ignore them.
 
         // It is necessary to remeasure itself.
-        cell_container.getLayoutParams().width = LinearLayout.LayoutParams.WRAP_CONTENT;
-        cell_text.requestLayout();
+        cell_container.layoutParams.width = LinearLayout.LayoutParams.WRAP_CONTENT
+        cell_text.requestLayout()
     }
 }

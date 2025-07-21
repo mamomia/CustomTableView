@@ -21,13 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
-package com.mushi.customtableview.sort;
-
-import androidx.annotation.NonNull;
-
-import java.util.Comparator;
-import java.util.List;
+package com.mushi.customtableview.sort
 
 /**
  * In order to keep RowHeader DataSet and Main DataSet aligned
@@ -35,38 +29,29 @@ import java.util.List;
  * So if MainDataSet row 1 moved to position 10, RowHeader 1 move to position 10 too.
  * To accomplish that we need to set a comparator that use MainDataSet
  * in order to sort RowHeader.
- * Created by cedricferry on 7/2/18.
+ * Created by Mushi on 7/2/18.
  */
-public class ColumnForRowHeaderSortComparator implements Comparator<ISortableModel> {
-    @NonNull
-    private final List<ISortableModel> mRowHeaderList;
-    @NonNull
-    private final List<List<ISortableModel>> mReferenceList;
-    private final int column;
-    @NonNull
-    private final SortState mSortState;
-    @NonNull
-    private final ColumnSortComparator mColumnSortComparator;
+class ColumnForRowHeaderSortComparator(
+    private val rowHeaderList: List<ISortableModel>,
+    private val referenceList: List<List<ISortableModel>>,
+    private val column: Int,
+    private val sortState: SortState
+) : Comparator<ISortableModel> {
 
-    public ColumnForRowHeaderSortComparator(@NonNull List<ISortableModel> rowHeader,
-                                            @NonNull List<List<ISortableModel>> referenceList,
-                                            int column,
-                                            @NonNull SortState sortState) {
-        this.mRowHeaderList = rowHeader;
-        this.mReferenceList = referenceList;
-        this.column = column;
-        this.mSortState = sortState;
-        this.mColumnSortComparator = new ColumnSortComparator(column, sortState);
-    }
+    private val columnSortComparator = ColumnSortComparator(column, sortState)
 
-    @Override
-    public int compare(ISortableModel o, ISortableModel t1) {
-        Object o1 = mReferenceList.get(this.mRowHeaderList.indexOf(o)).get(column).getContent();
-        Object o2 = mReferenceList.get(this.mRowHeaderList.indexOf(t1)).get(column).getContent();
-        if (mSortState == SortState.DESCENDING) {
-            return mColumnSortComparator.compareContent(o2, o1);
+    override fun compare(o1: ISortableModel, o2: ISortableModel): Int {
+        val index1 = rowHeaderList.indexOf(o1)
+        val index2 = rowHeaderList.indexOf(o2)
+
+        val content1 = referenceList[index1][column].content
+        val content2 = referenceList[index2][column].content
+
+        return if (sortState == SortState.DESCENDING) {
+            columnSortComparator.compareContent(content2, content1)
         } else {
-            return mColumnSortComparator.compareContent(o1, o2);
+            columnSortComparator.compareContent(content1, content2)
         }
     }
 }
+

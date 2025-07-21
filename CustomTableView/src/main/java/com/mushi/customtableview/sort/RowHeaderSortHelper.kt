@@ -21,42 +21,30 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
-package com.mushi.customtableview.sort;
-
-import androidx.annotation.Nullable;
+package com.mushi.customtableview.sort
 
 /**
- * Created by cedricferry on 6/2/18.
+ * Created by Mushi on 6/2/18.
  */
+class RowHeaderSortHelper {
+    private var mSortState: SortState? = null
 
-public class RowHeaderSortHelper {
-    @Nullable
-    private SortState mSortState;
-
-    public RowHeaderSortHelper() {
-    }
-
-    private void sortingStatusChanged(@Nullable SortState sortState) {
-        mSortState = sortState;
+    private fun sortingStatusChanged(sortState: SortState?) {
+        mSortState = sortState
         // TODO: Should we add an interface and listener and call listener when it is sorted?
     }
 
-    public void setSortingStatus(@Nullable SortState status) {
-        mSortState = status;
-        sortingStatusChanged(status);
+    fun clearSortingStatus() {
+        mSortState = SortState.UNSORTED
     }
 
-    public void clearSortingStatus() {
-        mSortState = SortState.UNSORTED;
-    }
+    val isSorting: Boolean
+        get() = mSortState != SortState.UNSORTED
 
-    public boolean isSorting() {
-        return mSortState != SortState.UNSORTED;
-    }
-
-    @Nullable
-    public SortState getSortingStatus() {
-        return mSortState;
-    }
+    var sortingStatus: SortState?
+        get() = mSortState
+        set(status) {
+            mSortState = status
+            sortingStatusChanged(status)
+        }
 }

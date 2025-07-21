@@ -21,38 +21,23 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+package com.mushi.customtableview.listener
 
-package com.mushi.customtableview.listener;
-
-import android.content.Context;
-import android.widget.Toast;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.RecyclerView;
-
-import com.mushi.customtableview.CellTextChangeListener;
-import com.mushi.customtableview.TableView;
-import com.mushi.customtableview.holder.ColumnHeaderViewHolder;
-import com.mushi.customtableview.popup.ColumnHeaderLongPressPopup;
+import android.widget.Toast
+import androidx.recyclerview.widget.RecyclerView
+import com.mushi.customtableview.TableView
+import com.mushi.customtableview.holder.ColumnHeaderViewHolder
+import com.mushi.customtableview.popup.ColumnHeaderLongPressPopup
 
 /**
  * Created by Mushi on 21/09/2017.
  */
-
-public class TableViewListener implements ITableViewListener {
-    @NonNull
-    private final Context mContext;
-    @NonNull
-    private final TableView mTableView;
-    @Nullable
-    private final CellTextChangeListener customListener;
-
-    public TableViewListener(@NonNull TableView tableView, @Nullable CellTextChangeListener listener) {
-        this.mContext = tableView.getContext();
-        this.mTableView = tableView;
-        this.customListener = listener;
-    }
+class TableViewListener(
+    private val mTableView: TableView,
+    private val customListener: TableCellListener
+) :
+    ITableViewListener {
+    private val mContext = mTableView.context
 
     /**
      * Called when user click any cell item.
@@ -61,13 +46,10 @@ public class TableViewListener implements ITableViewListener {
      * @param column   : X (Column) position of Clicked Cell item.
      * @param row      : Y (Row) position of Clicked Cell item.
      */
-    @Override
-    public void onCellClicked(@NonNull RecyclerView.ViewHolder cellView, int column, int row) {
+    override fun onCellClicked(cellView: RecyclerView.ViewHolder, column: Int, row: Int) {
         // Do what you want.
-        showToast("Cell " + column + " " + row + " has been clicked.");
-        if (customListener != null) {
-            customListener.onCellClicked(cellView, column, row);
-        }
+        showToast("Cell $column $row has been clicked.")
+        customListener.onCellClicked(cellView, column, row)
     }
 
     /**
@@ -77,10 +59,9 @@ public class TableViewListener implements ITableViewListener {
      * @param column   : X (Column) position of Clicked Cell item.
      * @param row      : Y (Row) position of Clicked Cell item.
      */
-    @Override
-    public void onCellDoubleClicked(@NonNull RecyclerView.ViewHolder cellView, int column, int row) {
+    override fun onCellDoubleClicked(cellView: RecyclerView.ViewHolder, column: Int, row: Int) {
         // Do what you want.
-        showToast("Cell " + column + " " + row + " has been double clicked.");
+        showToast("Cell $column $row has been double clicked.")
     }
 
     /**
@@ -90,11 +71,12 @@ public class TableViewListener implements ITableViewListener {
      * @param column   : X (Column) position of Long Pressed Cell item.
      * @param row      : Y (Row) position of Long Pressed Cell item.
      */
-    @Override
-    public void onCellLongPressed(@NonNull RecyclerView.ViewHolder cellView, final int column,
-                                  int row) {
+    override fun onCellLongPressed(
+        cellView: RecyclerView.ViewHolder, column: Int,
+        row: Int
+    ) {
         // Do What you want
-        showToast("Cell " + column + " " + row + " has been long pressed.");
+        showToast("Cell $column $row has been long pressed.")
     }
 
     /**
@@ -103,10 +85,9 @@ public class TableViewListener implements ITableViewListener {
      * @param columnHeaderView : Clicked Column Header ViewHolder.
      * @param column           : X (Column) position of Clicked Column Header item.
      */
-    @Override
-    public void onColumnHeaderClicked(@NonNull RecyclerView.ViewHolder columnHeaderView, int column) {
+    override fun onColumnHeaderClicked(columnHeaderView: RecyclerView.ViewHolder, column: Int) {
         // Do what you want.
-        showToast("Column header  " + column + " has been clicked.");
+        showToast("Column header  $column has been clicked.")
     }
 
     /**
@@ -115,10 +96,12 @@ public class TableViewListener implements ITableViewListener {
      * @param columnHeaderView : Clicked Column Header ViewHolder.
      * @param column           : X (Column) position of Clicked Column Header item.
      */
-    @Override
-    public void onColumnHeaderDoubleClicked(@NonNull RecyclerView.ViewHolder columnHeaderView, int column) {
+    override fun onColumnHeaderDoubleClicked(
+        columnHeaderView: RecyclerView.ViewHolder,
+        column: Int
+    ) {
         // Do what you want.
-        showToast("Column header  " + column + " has been double clicked.");
+        showToast("Column header  $column has been double clicked.")
     }
 
     /**
@@ -127,14 +110,14 @@ public class TableViewListener implements ITableViewListener {
      * @param columnHeaderView : Long Pressed Column Header ViewHolder.
      * @param column           : X (Column) position of Long Pressed Column Header item.
      */
-    @Override
-    public void onColumnHeaderLongPressed(@NonNull RecyclerView.ViewHolder columnHeaderView, int column) {
-        if (columnHeaderView instanceof ColumnHeaderViewHolder) {
+    override fun onColumnHeaderLongPressed(columnHeaderView: RecyclerView.ViewHolder, column: Int) {
+        if (columnHeaderView is ColumnHeaderViewHolder) {
             // Create Long Press Popup
-            ColumnHeaderLongPressPopup popup = new ColumnHeaderLongPressPopup(
-                    (ColumnHeaderViewHolder) columnHeaderView, mTableView);
+            val popup = ColumnHeaderLongPressPopup(
+                columnHeaderView, mTableView
+            )
             // Show
-            popup.show();
+            popup.show()
         }
     }
 
@@ -144,10 +127,9 @@ public class TableViewListener implements ITableViewListener {
      * @param rowHeaderView : Clicked Row Header ViewHolder.
      * @param row           : Y (Row) position of Clicked Row Header item.
      */
-    @Override
-    public void onRowHeaderClicked(@NonNull RecyclerView.ViewHolder rowHeaderView, int row) {
+    override fun onRowHeaderClicked(rowHeaderView: RecyclerView.ViewHolder, row: Int) {
         // Do whatever you want.
-        showToast("Row header " + row + " has been clicked.");
+        showToast("Row header $row has been clicked.")
     }
 
     /**
@@ -156,10 +138,9 @@ public class TableViewListener implements ITableViewListener {
      * @param rowHeaderView : Clicked Row Header ViewHolder.
      * @param row           : Y (Row) position of Clicked Row Header item.
      */
-    @Override
-    public void onRowHeaderDoubleClicked(@NonNull RecyclerView.ViewHolder rowHeaderView, int row) {
+    override fun onRowHeaderDoubleClicked(rowHeaderView: RecyclerView.ViewHolder, row: Int) {
         // Do whatever you want.
-        showToast("Row header " + row + " has been double clicked.");
+        showToast("Row header $row has been double clicked.")
     }
 
     /**
@@ -168,12 +149,11 @@ public class TableViewListener implements ITableViewListener {
      * @param rowHeaderView : Long Pressed Row Header ViewHolder.
      * @param row           : Y (Row) position of Long Pressed Row Header item.
      */
-    @Override
-    public void onRowHeaderLongPressed(@NonNull RecyclerView.ViewHolder rowHeaderView, int row) {
-        showToast("Row header " + row + " has been long clicked.");
+    override fun onRowHeaderLongPressed(rowHeaderView: RecyclerView.ViewHolder, row: Int) {
+        showToast("Row header $row has been long clicked.")
     }
 
-    private void showToast(String p_strMessage) {
-        Toast.makeText(mContext, p_strMessage, Toast.LENGTH_SHORT).show();
+    private fun showToast(message: String) {
+        Toast.makeText(mContext, message, Toast.LENGTH_SHORT).show()
     }
 }

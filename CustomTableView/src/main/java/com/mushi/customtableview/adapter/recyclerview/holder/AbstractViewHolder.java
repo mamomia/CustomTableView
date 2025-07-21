@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2025 Mushi
+ * Copyright (c) 2021 Evren Coşkun
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -31,7 +31,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 /**
- * Created by Mushi on 23/10/2017.
+ * Created by mushi on 23/10/2017.
  */
 
 public abstract class AbstractViewHolder extends RecyclerView.ViewHolder {

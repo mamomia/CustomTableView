@@ -21,62 +21,42 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+package com.mushi.customtableview.sort
 
-package com.mushi.customtableview.sort;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
-import java.util.Date;
+import java.util.Date
 
 /**
- * Created by cedricferry on 6/2/18.
+ * Created by Mushi on 6/2/18.
  */
+abstract class AbstractSortComparator {
 
-public abstract class AbstractSortComparator {
-    @NonNull
-    protected SortState mSortState;
-
-    protected int compareContent(@Nullable Object o1, @Nullable Object o2) {
-        if (o1 == null && o2 == null) {
-            return 0;
-        } else if (o1 == null) {
-            return -1;
-        } else if (o2 == null) {
-            return 1;
-        } else {
-            Class type = o1.getClass();
-            if (Comparable.class.isAssignableFrom(type)) {
-                return ((Comparable) o1).compareTo(o2);
-            } else if (type.getSuperclass() == Number.class) {
-                return compare((Number) o1, (Number) o2);
-            } else if (type == String.class) {
-                return ((String) o1).compareTo((String) o2);
-            } else if (type == Date.class) {
-                return compare((Date) o1, (Date) o2);
-            } else if (type == Boolean.class) {
-                return compare((Boolean) o1, (Boolean) o2);
-            } else {
-                return ((String) o1).compareTo((String) o2);
+    fun compareContent(o1: Any?, o2: Any?): Int {
+        return when {
+            o1 == null && o2 == null -> 0
+            o1 == null -> -1
+            o2 == null -> 1
+            o1 is Comparable<*> && o1::class == o2::class -> {
+                @Suppress("UNCHECKED_CAST")
+                (o1 as Comparable<Any>).compareTo(o2)
             }
+
+            o1 is Number && o2 is Number -> compare(o1, o2)
+            o1 is String && o2 is String -> o1.compareTo(o2)
+            o1 is Date && o2 is Date -> compare(o1, o2)
+            o1 is Boolean && o2 is Boolean -> compare(o1, o2)
+            else -> o1.toString().compareTo(o2.toString())
         }
     }
 
-    public int compare(Number o1, Number o2) {
-        double n1 = o1.doubleValue();
-        double n2 = o2.doubleValue();
-
-        return Double.compare(n1, n2);
+    private fun compare(o1: Number, o2: Number): Int {
+        return o1.toDouble().compareTo(o2.toDouble())
     }
 
-    public int compare(Date o1, Date o2) {
-        long n1 = o1.getTime();
-        long n2 = o2.getTime();
-
-        return Long.compare(n1, n2);
+    private fun compare(o1: Date, o2: Date): Int {
+        return o1.time.compareTo(o2.time)
     }
 
-    public int compare(Boolean o1, Boolean o2) {
-        return Boolean.compare(o1, o2);
+    private fun compare(o1: Boolean, o2: Boolean): Int {
+        return o1.compareTo(o2)
     }
 }

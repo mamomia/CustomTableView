@@ -21,53 +21,43 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+package com.mushi.customtableview.listener
 
-package com.mushi.customtableview.listener;
-
-import android.view.View;
-
-import androidx.annotation.NonNull;
-
-import com.mushi.customtableview.ITableView;
-import com.mushi.customtableview.adapter.recyclerview.CellRecyclerView;
-import com.mushi.customtableview.layoutmanager.CellLayoutManager;
-
-import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
+import android.view.View
+import android.view.View.OnLayoutChangeListener
+import android.view.ViewGroup
+import com.mushi.customtableview.ITableView
 
 /**
  * Created by Mushi on 21.01.2018.
  */
+class TableViewLayoutChangeListener(tableView: ITableView) : OnLayoutChangeListener {
+    private val mCellRecyclerView = tableView.cellRecyclerView
+    private val mColumnHeaderRecyclerView = tableView.columnHeaderRecyclerView
+    private val mCellLayoutManager = tableView.cellLayoutManager
 
-public class TableViewLayoutChangeListener implements View.OnLayoutChangeListener {
-    @NonNull
-    private final CellRecyclerView mCellRecyclerView;
-    @NonNull
-    private final CellRecyclerView mColumnHeaderRecyclerView;
-    @NonNull
-    private final CellLayoutManager mCellLayoutManager;
-
-    public TableViewLayoutChangeListener(@NonNull ITableView tableView) {
-        this.mCellRecyclerView = tableView.getCellRecyclerView();
-        this.mColumnHeaderRecyclerView = tableView.getColumnHeaderRecyclerView();
-        this.mCellLayoutManager = tableView.getCellLayoutManager();
-    }
-
-    @Override
-    public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int
-            oldTop, int oldRight, int oldBottom) {
-
-        if (v.isShown() && (right - left) != (oldRight - oldLeft)) {
-
+    override fun onLayoutChange(
+        v: View,
+        left: Int,
+        top: Int,
+        right: Int,
+        bottom: Int,
+        oldLeft: Int,
+        oldTop: Int,
+        oldRight: Int,
+        oldBottom: Int
+    ) {
+        if (v.isShown && (right - left) != (oldRight - oldLeft)) {
             // Control who need the remeasure
-            if (mColumnHeaderRecyclerView.getWidth() > mCellRecyclerView.getWidth()) {
+
+            if (mColumnHeaderRecyclerView.width > mCellRecyclerView.width) {
                 // Remeasure all nested CellRow recyclerViews
-                mCellLayoutManager.remeasureAllChild();
-
-            } else if (mCellRecyclerView.getWidth() > mColumnHeaderRecyclerView.getWidth()) {
-
+                mCellLayoutManager.remeasureAllChild()
+            } else if (mCellRecyclerView.width > mColumnHeaderRecyclerView.width) {
                 // It seems Column Header is needed.
-                mColumnHeaderRecyclerView.getLayoutParams().width = WRAP_CONTENT;
-                mColumnHeaderRecyclerView.requestLayout();
+
+                mColumnHeaderRecyclerView.layoutParams.width = ViewGroup.LayoutParams.WRAP_CONTENT
+                mColumnHeaderRecyclerView.requestLayout()
             }
         }
     }

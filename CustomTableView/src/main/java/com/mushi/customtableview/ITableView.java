@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2025 Mushi
+ * Copyright (c) 2021 Evren Coşkun
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -49,7 +49,7 @@ import com.mushi.customtableview.listener.scroll.VerticalRecyclerViewListener;
 import com.mushi.customtableview.sort.SortState;
 
 /**
- * Created by Mushi on 19/06/2017.
+ * Created by mushi on 19/06/2017.
  */
 
 public interface ITableView {

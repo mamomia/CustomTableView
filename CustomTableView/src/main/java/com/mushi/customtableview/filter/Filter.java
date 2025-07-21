@@ -113,10 +113,10 @@ public class Filter {
         // Used Iterator for removing instead of canonical loop to prevent ConcurrentModificationException.
         for (Iterator<FilterItem> filterItemIterator = filterItems.iterator(); filterItemIterator.hasNext(); ) {
             final FilterItem item = filterItemIterator.next();
-            if (column == -1 && item.getFilterType().equals(filterItem.getFilterType())) {
+            if (column == -1 && item.filterType.equals(filterItem.filterType)) {
                 filterItemIterator.remove();
                 break;
-            } else if (item.getColumn() == filterItem.getColumn()) {
+            } else if (item.column == filterItem.column) {
                 filterItemIterator.remove();
                 break;
             }
@@ -135,10 +135,10 @@ public class Filter {
         // Used Iterator for updating instead of canonical loop to prevent ConcurrentModificationException.
         for (Iterator<FilterItem> filterItemIterator = filterItems.iterator(); filterItemIterator.hasNext(); ) {
             final FilterItem item = filterItemIterator.next();
-            if (column == -1 && item.getFilterType().equals(filterItem.getFilterType())) {
+            if (column == -1 && item.filterType.equals(filterItem.filterType)) {
                 filterItems.set(filterItems.indexOf(item), filterItem);
                 break;
-            } else if (item.getColumn() == filterItem.getColumn()) {
+            } else if (item.column == filterItem.column) {
                 filterItems.set(filterItems.indexOf(item), filterItem);
                 break;
             }
@@ -156,9 +156,9 @@ public class Filter {
     private boolean isAlreadyFiltering(int column, @NonNull FilterItem filterItem) {
         // This would determine if Filter is already filtering ALL or a specified COLUMN.
         for (FilterItem item : filterItems) {
-            if (column == -1 && item.getFilterType().equals(filterItem.getFilterType())) {
+            if (column == -1 && item.filterType.equals(filterItem.filterType)) {
                 return true;
-            } else if (item.getColumn() == filterItem.getColumn()) {
+            } else if (item.column == filterItem.column) {
                 return true;
             }
         }

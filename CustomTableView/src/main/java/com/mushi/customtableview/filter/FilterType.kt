@@ -21,17 +21,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
-package com.mushi.customtableview.filter;
+package com.mushi.customtableview.filter
 
 /**
  * The type of filter based on the target.
  */
-public enum FilterType {
+enum class FilterType {
     /**
      * Filters only a specific column.
      */
     COLUMN,
+
     /**
      * Filters all the data in the TableView.
      */

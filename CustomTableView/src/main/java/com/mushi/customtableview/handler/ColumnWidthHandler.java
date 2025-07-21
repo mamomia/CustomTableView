@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2025 Mushi
+ * Copyright (c) 2021 Evren Coşkun
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,7 +29,7 @@ import androidx.annotation.NonNull;
 import com.mushi.customtableview.ITableView;
 
 /**
- * Created by Mushi on 25.04.2018.
+ * Created by mushi on 25.04.2018.
  */
 
 public class ColumnWidthHandler {

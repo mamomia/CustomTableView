@@ -21,116 +21,105 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+package com.mushi.customtableview.listener.itemclick
 
-package com.mushi.customtableview.listener.itemclick;
-
-import android.view.MotionEvent;
-import android.view.View;
-
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
-
-import com.mushi.customtableview.ITableView;
-import com.mushi.customtableview.adapter.recyclerview.CellRecyclerView;
-import com.mushi.customtableview.adapter.recyclerview.CellRowRecyclerViewAdapter;
-import com.mushi.customtableview.adapter.recyclerview.holder.AbstractViewHolder;
+import android.view.MotionEvent
+import androidx.recyclerview.widget.RecyclerView
+import com.mushi.customtableview.ITableView
+import com.mushi.customtableview.adapter.recyclerview.CellRecyclerView
+import com.mushi.customtableview.adapter.recyclerview.CellRowRecyclerViewAdapter
+import com.mushi.customtableview.adapter.recyclerview.holder.AbstractViewHolder
 
 /**
  * Created by Mushi on 26/09/2017.
  */
+class CellRecyclerViewItemClickListener(recyclerView: CellRecyclerView, tableView: ITableView) :
+    AbstractItemClickListener(recyclerView, tableView) {
+    private val mCellRecyclerView = tableView.cellRecyclerView
 
-public class CellRecyclerViewItemClickListener extends AbstractItemClickListener {
-    @NonNull
-    private final CellRecyclerView mCellRecyclerView;
-
-    public CellRecyclerViewItemClickListener(@NonNull CellRecyclerView recyclerView, @NonNull ITableView tableView) {
-        super(recyclerView, tableView);
-        this.mCellRecyclerView = tableView.getCellRecyclerView();
-    }
-
-    @Override
-    protected boolean clickAction(@NonNull RecyclerView view, @NonNull MotionEvent e) {
+    override fun clickAction(view: RecyclerView, e: MotionEvent): Boolean {
         // Get interacted view from x,y coordinate.
-        View childView = view.findChildViewUnder(e.getX(), e.getY());
+        val childView = view.findChildViewUnder(e.x, e.y)
 
         if (childView != null) {
             // Find the view holder
-            AbstractViewHolder holder = (AbstractViewHolder) mRecyclerView.getChildViewHolder
-                    (childView);
+            val holder = mRecyclerView.getChildViewHolder(childView) as AbstractViewHolder
 
             // Get y position from adapter
-            CellRowRecyclerViewAdapter adapter = (CellRowRecyclerViewAdapter) mRecyclerView
-                    .getAdapter();
+            val adapter = mRecyclerView
+                .adapter as CellRowRecyclerViewAdapter<*>?
 
-            int column = holder.getAdapterPosition();
-            int row = adapter.getYPosition();
+            val column = holder.adapterPosition
+            val row = adapter!!.yPosition
 
             // Control to ignore selection color
-            if (!mTableView.isIgnoreSelectionColors()) {
-                mSelectionHandler.setSelectedCellPositions(holder, column, row);
+            if (!mTableView.isIgnoreSelectionColors) {
+                mSelectionHandler.setSelectedCellPositions(holder, column, row)
             }
 
             // Call ITableView listener for item click
-            getTableViewListener().onCellClicked(holder, column, row);
+            tableViewListener.onCellClicked(holder, column, row)
 
-            return true;
+            return true
         }
-        return false;
+        return false
     }
 
-    @Override
-    protected void longPressAction(@NonNull MotionEvent e) {
+    override fun longPressAction(e: MotionEvent) {
         // Consume the action for the time when either the cell row recyclerView or
         // the cell recyclerView is scrolling.
-        if ((mRecyclerView.getScrollState() != RecyclerView.SCROLL_STATE_IDLE) ||
-                (mCellRecyclerView.getScrollState() != RecyclerView.SCROLL_STATE_IDLE)) {
-            return;
+        if ((mRecyclerView.scrollState != RecyclerView.SCROLL_STATE_IDLE) ||
+            (mCellRecyclerView.scrollState != RecyclerView.SCROLL_STATE_IDLE)
+        ) {
+            return
         }
 
         // Get interacted view from x,y coordinate.
-        View child = mRecyclerView.findChildViewUnder(e.getX(), e.getY());
+        val child = mRecyclerView.findChildViewUnder(e.x, e.y)
 
         if (child != null) {
             // Find the view holder
-            RecyclerView.ViewHolder holder = mRecyclerView.getChildViewHolder(child);
+            val holder = mRecyclerView.getChildViewHolder(child)
 
             // Get y position from adapter
-            CellRowRecyclerViewAdapter adapter = (CellRowRecyclerViewAdapter) mRecyclerView
-                    .getAdapter();
+            val adapter = mRecyclerView
+                .adapter as CellRowRecyclerViewAdapter<*>?
 
             // Call ITableView listener for long click
-            getTableViewListener().onCellLongPressed(holder, holder.getAdapterPosition(), adapter
-                    .getYPosition());
+            if (adapter != null) {
+                tableViewListener.onCellLongPressed(
+                    holder, holder.adapterPosition, adapter
+                        .yPosition
+                )
+            }
         }
     }
 
-    @Override
-    protected boolean doubleClickAction(@NonNull MotionEvent e) {
+    override fun doubleClickAction(e: MotionEvent): Boolean {
         // Get interacted view from x,y coordinate.
-        View childView = mRecyclerView.findChildViewUnder(e.getX(), e.getY());
+        val childView = mRecyclerView.findChildViewUnder(e.x, e.y)
 
         if (childView != null) {
             // Find the view holder
-            AbstractViewHolder holder = (AbstractViewHolder) mRecyclerView.getChildViewHolder
-                    (childView);
+            val holder = mRecyclerView.getChildViewHolder(childView) as AbstractViewHolder
 
             // Get y position from adapter
-            CellRowRecyclerViewAdapter adapter = (CellRowRecyclerViewAdapter) mRecyclerView
-                    .getAdapter();
+            val adapter = mRecyclerView
+                .adapter as CellRowRecyclerViewAdapter<*>?
 
-            int column = holder.getAdapterPosition();
-            int row = adapter.getYPosition();
+            val column = holder.adapterPosition
+            val row = adapter!!.yPosition
 
             // Control to ignore selection color
-            if (!mTableView.isIgnoreSelectionColors()) {
-                mSelectionHandler.setSelectedCellPositions(holder, column, row);
+            if (!mTableView.isIgnoreSelectionColors) {
+                mSelectionHandler.setSelectedCellPositions(holder, column, row)
             }
 
             // Call ITableView listener for item click
-            getTableViewListener().onCellDoubleClicked(holder, column, row);
+            tableViewListener.onCellDoubleClicked(holder, column, row)
 
-            return true;
+            return true
         }
-        return false;
+        return false
     }
 }

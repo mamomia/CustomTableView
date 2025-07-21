@@ -21,93 +21,68 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+package com.mushi.customtableview.sort
 
-package com.mushi.customtableview.sort;
-
-import androidx.annotation.NonNull;
-
-import com.mushi.customtableview.adapter.recyclerview.holder.AbstractSorterViewHolder;
-import com.mushi.customtableview.adapter.recyclerview.holder.AbstractViewHolder;
-import com.mushi.customtableview.layoutmanager.ColumnHeaderLayoutManager;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.mushi.customtableview.adapter.recyclerview.holder.AbstractSorterViewHolder
+import com.mushi.customtableview.layoutmanager.ColumnHeaderLayoutManager
 
 /**
  * Created by Mushi on 15.12.2017.
  */
+class ColumnSortHelper(private val mColumnHeaderLayoutManager: ColumnHeaderLayoutManager) {
+    private val mSortingColumns: MutableList<Directive> = ArrayList()
 
-public class ColumnSortHelper {
-    @NonNull
-    private final List<Directive> mSortingColumns = new ArrayList<>();
-    @NonNull
-    private final ColumnHeaderLayoutManager mColumnHeaderLayoutManager;
-
-    public ColumnSortHelper(@NonNull ColumnHeaderLayoutManager columnHeaderLayoutManager) {
-        this.mColumnHeaderLayoutManager = columnHeaderLayoutManager;
-    }
-
-    private void sortingStatusChanged(int column, @NonNull SortState sortState) {
-        AbstractViewHolder holder = mColumnHeaderLayoutManager.getViewHolder(column);
+    private fun sortingStatusChanged(column: Int, sortState: SortState) {
+        val holder = mColumnHeaderLayoutManager.getViewHolder(column)
 
         if (holder != null) {
-            if (holder instanceof AbstractSorterViewHolder) {
-                ((AbstractSorterViewHolder) holder).onSortingStatusChanged(sortState);
-
+            if (holder is AbstractSorterViewHolder) {
+                holder.onSortingStatusChanged(sortState)
             } else {
-                throw new IllegalArgumentException("Column Header ViewHolder must extend " +
-                        "AbstractSorterViewHolder");
+                throw IllegalArgumentException(
+                    "Column Header ViewHolder must extend " +
+                            "AbstractSorterViewHolder"
+                )
             }
         }
     }
 
-    public void setSortingStatus(int column, @NonNull SortState status) {
-        Directive directive = getDirective(column);
-        if (directive != EMPTY_DIRECTIVE) {
-            mSortingColumns.remove(directive);
+    fun setSortingStatus(column: Int, status: SortState) {
+        val directive = getDirective(column)
+        if (directive !== EMPTY_DIRECTIVE) {
+            mSortingColumns.remove(directive)
         }
         if (status != SortState.UNSORTED) {
-            mSortingColumns.add(new Directive(column, status));
+            mSortingColumns.add(Directive(column, status))
         }
 
-        sortingStatusChanged(column, status);
+        sortingStatusChanged(column, status)
     }
 
-    public void clearSortingStatus() {
-        mSortingColumns.clear();
+    fun clearSortingStatus() {
+        mSortingColumns.clear()
     }
 
-    public boolean isSorting() {
-        return mSortingColumns.size() != 0;
+    val isSorting: Boolean
+        get() = mSortingColumns.size != 0
+
+    fun getSortingStatus(column: Int): SortState {
+        return getDirective(column).direction
     }
 
-    @NonNull
-    public SortState getSortingStatus(int column) {
-        return getDirective(column).direction;
-    }
-
-    @NonNull
-    private Directive getDirective(int column) {
-        for (int i = 0; i < mSortingColumns.size(); i++) {
-            Directive directive = mSortingColumns.get(i);
+    private fun getDirective(column: Int): Directive {
+        for (i in mSortingColumns.indices) {
+            val directive = mSortingColumns[i]
             if (directive.column == column) {
-                return directive;
+                return directive
             }
         }
-        return EMPTY_DIRECTIVE;
+        return EMPTY_DIRECTIVE
     }
 
-    private static class Directive {
-        private final int column;
-        @NonNull
-        private final SortState direction;
+    private class Directive(val column: Int, val direction: SortState)
 
-        Directive(int column, @NonNull SortState direction) {
-            this.column = column;
-            this.direction = direction;
-        }
+    companion object {
+        private val EMPTY_DIRECTIVE = Directive(-1, SortState.UNSORTED)
     }
-
-    @NonNull
-    private static final Directive EMPTY_DIRECTIVE = new Directive(-1, SortState.UNSORTED);
 }

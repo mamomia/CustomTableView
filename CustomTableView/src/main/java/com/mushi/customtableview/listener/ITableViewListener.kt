@@ -21,41 +21,29 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+package com.mushi.customtableview.listener
 
-package com.mushi.customtableview.listener;
-
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView
 
 /**
  * Created by Mushi on 20/09/2017.
  */
+interface ITableViewListener {
+    fun onCellClicked(cellView: RecyclerView.ViewHolder, column: Int, row: Int)
 
-public interface ITableViewListener {
+    fun onCellDoubleClicked(cellView: RecyclerView.ViewHolder, column: Int, row: Int)
 
-    void onCellClicked(@NonNull RecyclerView.ViewHolder cellView, int column, int
-            row);
+    fun onCellLongPressed(cellView: RecyclerView.ViewHolder, column: Int, row: Int)
 
-    void onCellDoubleClicked(@NonNull RecyclerView.ViewHolder cellView, int column, int
-            row);
+    fun onColumnHeaderClicked(columnHeaderView: RecyclerView.ViewHolder, column: Int)
 
-    void onCellLongPressed(@NonNull RecyclerView.ViewHolder cellView, int column, int
-            row);
+    fun onColumnHeaderDoubleClicked(columnHeaderView: RecyclerView.ViewHolder, column: Int)
 
-    void onColumnHeaderClicked(@NonNull RecyclerView.ViewHolder columnHeaderView, int
-            column);
+    fun onColumnHeaderLongPressed(columnHeaderView: RecyclerView.ViewHolder, column: Int)
 
-    void onColumnHeaderDoubleClicked(@NonNull RecyclerView.ViewHolder columnHeaderView, int
-            column);
+    fun onRowHeaderClicked(rowHeaderView: RecyclerView.ViewHolder, row: Int)
 
-    void onColumnHeaderLongPressed(@NonNull RecyclerView.ViewHolder columnHeaderView, int
-            column);
+    fun onRowHeaderDoubleClicked(rowHeaderView: RecyclerView.ViewHolder, row: Int)
 
-    void onRowHeaderClicked(@NonNull RecyclerView.ViewHolder rowHeaderView, int row);
-
-    void onRowHeaderDoubleClicked(@NonNull RecyclerView.ViewHolder rowHeaderView, int row);
-
-    void onRowHeaderLongPressed(@NonNull RecyclerView.ViewHolder rowHeaderView, int
-            row);
-
+    fun onRowHeaderLongPressed(rowHeaderView: RecyclerView.ViewHolder, row: Int)
 }

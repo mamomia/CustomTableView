@@ -21,45 +21,34 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
-package com.mushi.customtableview.sort;
-
-import androidx.annotation.NonNull;
-
-import java.util.Comparator;
-import java.util.List;
+package com.mushi.customtableview.sort
 
 /**
- * Created by cedricferry on 14/2/18.
+ * Created by Mushi on 14/2/18.
  */
+class RowHeaderForCellSortComparator(
+    private val referenceList: List<ISortableModel>,
+    private val columnList: List<List<ISortableModel>>,
+    private val sortState: SortState
+) : Comparator<List<ISortableModel>> {
 
-public class RowHeaderForCellSortComparator implements Comparator<List<ISortableModel>> {
-    @NonNull
-    private final List<ISortableModel> mReferenceList;
-    @NonNull
-    private final List<List<ISortableModel>> mColumnList;
-    @NonNull
-    private final SortState mSortState;
-    @NonNull
-    private final RowHeaderSortComparator mRowHeaderSortComparator;
+    private val rowHeaderSortComparator = RowHeaderSortComparator(sortState)
 
-    public RowHeaderForCellSortComparator(@NonNull List<ISortableModel> referenceList,
-                                          @NonNull List<List<ISortableModel>> columnList,
-                                          @NonNull SortState sortState) {
-        this.mReferenceList = referenceList;
-        this.mColumnList = columnList;
-        this.mSortState = sortState;
-        this.mRowHeaderSortComparator = new RowHeaderSortComparator(sortState);
-    }
+    override fun compare(o1: List<ISortableModel>, o2: List<ISortableModel>): Int {
+        val refIndex1 = columnList.indexOf(o1)
+        val refIndex2 = columnList.indexOf(o2)
 
-    @Override
-    public int compare(List<ISortableModel> o, List<ISortableModel> t1) {
-        Object o1 = mReferenceList.get(this.mColumnList.indexOf(o)).getContent();
-        Object o2 = mReferenceList.get(this.mColumnList.indexOf(t1)).getContent();
-        if (mSortState == SortState.DESCENDING) {
-            return mRowHeaderSortComparator.compareContent(o2, o1);
+        // Fallback if index not found
+        if (refIndex1 == -1 || refIndex2 == -1) return 0
+
+        val content1 = referenceList[refIndex1].content
+        val content2 = referenceList[refIndex2].content
+
+        return if (sortState == SortState.DESCENDING) {
+            rowHeaderSortComparator.compareContent(content2, content1)
         } else {
-            return mRowHeaderSortComparator.compareContent(o1, o2);
+            rowHeaderSortComparator.compareContent(content1, content2)
         }
     }
 }
+

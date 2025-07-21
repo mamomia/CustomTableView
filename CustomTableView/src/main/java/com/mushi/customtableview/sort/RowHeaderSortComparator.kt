@@ -21,29 +21,21 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
-package com.mushi.customtableview.sort;
-
-import androidx.annotation.NonNull;
-
-import java.util.Comparator;
+package com.mushi.customtableview.sort
 
 /**
- * Created by cedricferry on 6/2/18.
+ * Created by Mushi on 6/2/18.
  */
+class RowHeaderSortComparator(sortState: SortState) :
+    AbstractSortComparator(),
+    Comparator<ISortableModel> {
+    private val mSortState: SortState = sortState
 
-public class RowHeaderSortComparator extends AbstractSortComparator implements Comparator<ISortableModel> {
-
-    public RowHeaderSortComparator(@NonNull SortState sortState) {
-        this.mSortState = sortState;
-    }
-
-    @Override
-    public int compare(ISortableModel o1, ISortableModel o2) {
-        if (mSortState == SortState.DESCENDING) {
-            return compareContent(o2.getContent(), o1.getContent());
+    override fun compare(o1: ISortableModel, o2: ISortableModel): Int {
+        return if (mSortState == SortState.DESCENDING) {
+            compareContent(o2.content, o1.content)
         } else {
-            return compareContent(o1.getContent(), o2.getContent());
+            compareContent(o1.content, o2.content)
         }
     }
 }

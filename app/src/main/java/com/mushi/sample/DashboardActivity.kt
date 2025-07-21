@@ -6,9 +6,11 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.recyclerview.widget.RecyclerView
 import com.mushi.customtableview.TableView
+import com.mushi.customtableview.listener.CellTextChangeListener
+import com.mushi.customtableview.listener.TableCellListener
 import com.mushi.customtableview.listener.TableViewListener
-import com.mushi.customtableview.model.ActionColumn
 import com.mushi.customtableview.util.TableViewUtils
 import com.mushi.customtableview.util.TableViewUtils.getCell
 import com.mushi.customtableview.util.TableViewUtils.getCellList
@@ -54,65 +56,73 @@ class DashboardActivity : AppCompatActivity() {
             tableViewAdapter = TableViewAdapter()
             binding!!.tableView.isIgnoreSelectionColors = true
             binding!!.tableView.setAdapter(tableViewAdapter)
-
             binding!!.tableView.tableViewListener = tableView?.let {
-                TableViewListener(it) { _, columnIndex, rowIndex ->
-                    if (columnIndex === 8) {
-                        selectedListOfItems.removeAt(rowIndex)
-                        updateItemsListing()
+                TableViewListener(it, object : TableCellListener {
+                    override fun onCellClicked(
+                        cellView: RecyclerView.ViewHolder,
+                        column: Int,
+                        row: Int
+                    ) {
+                        if (column == 8) {
+                            selectedListOfItems.removeAt(row)
+                            updateItemsListing()
+                        }
+
+                        if (!TableViewUtils.isColumnEditable(clazz, column)) {
+                            AppUtility.hideKeyboard(this@DashboardActivity, binding!!.main)
+                        }
+                    }
+                })
+            }
+
+            tableViewAdapter!!.setTableCellListener(object : CellTextChangeListener {
+                override fun onColumnUpdated(
+                    newData: String?,
+                    column: Int,
+                    row: Int,
+                    cursor: Int
+                ) {
+                    if (newData.isNullOrEmpty()) return
+
+                    if (column == 0) {
+                        selectedListOfItems[row].ItemDescription = newData
+                    } else if (column == 2) {
+                        selectedListOfItems[row].WhsQty =
+                            AppUtility.round(AppUtility.parseDouble(newData), 2)
+                    } else if (column == 3) {
+                        selectedListOfItems[row].Quantity =
+                            AppUtility.round(AppUtility.parseDouble(newData), 2)
+                        selectedListOfItems[row].Dozen =
+                            AppUtility.round((selectedListOfItems[row].Quantity / 12), 2)
+                    } else if (column == 4) {
+                        selectedListOfItems[row].Dozen =
+                            AppUtility.round(AppUtility.parseDouble(newData), 2)
+                        selectedListOfItems[row].Quantity =
+                            AppUtility.round((selectedListOfItems[row].Dozen * 12), 2)
+                    } else if (column == 6) {
+                        selectedListOfItems[row].UnitPrice =
+                            AppUtility.round(AppUtility.parseDouble(newData), 2)
                     }
 
-                    // hide keyboard if cell is not edit table
-                    if (!TableViewUtils.isColumnEditable(clazz, columnIndex))
-                        AppUtility.hideKeyboard(this, binding!!.main)
+                    selectedListOfItems[row].LineTotal = AppUtility.round(
+                        (selectedListOfItems[row].Quantity * selectedListOfItems[row].UnitPrice),
+                        2
+                    )
+                    selectedListOfItems[row].Tax = 0.0
+
+                    tableViewAdapter!!.updateSingleRow(
+                        getCell(
+                            selectedListOfItems[row],
+                            DocumentRow::class.java,
+                            (column + 1),
+                            cursor
+                        ),
+                        row
+                    )
+                    resizeTableView()
                 }
-            }
-
-            tableViewAdapter!!.setTableCellListener { newData, columnIndex, rowIndex, cursor ->
-                if (columnIndex === 0) {
-                    // updated Pair
-                    selectedListOfItems[rowIndex].ItemDescription = newData
-                } else if (columnIndex === 2) {
-                    // updated Pair
-                    selectedListOfItems[rowIndex].WhsQty =
-                        AppUtility.round(AppUtility.parseDouble(newData), 2)
-                } else if (columnIndex === 3) {
-                    // updated Pair
-                    selectedListOfItems[rowIndex].Quantity =
-                        AppUtility.round(AppUtility.parseDouble(newData), 2)
-                    selectedListOfItems[rowIndex].Dozen =
-                        AppUtility.round((selectedListOfItems[rowIndex].Quantity / 12), 2)
-                } else if (columnIndex === 4) {
-                    // updated Dozen
-                    selectedListOfItems[rowIndex].Dozen =
-                        AppUtility.round(AppUtility.parseDouble(newData), 2)
-                    selectedListOfItems[rowIndex].Quantity =
-                        AppUtility.round((selectedListOfItems[rowIndex].Dozen * 12), 2)
-                } else if (columnIndex === 6) {
-                    // updated Price
-                    selectedListOfItems[rowIndex].UnitPrice =
-                        AppUtility.round(AppUtility.parseDouble(newData), 2)
-                }
-
-                selectedListOfItems[rowIndex].LineTotal = AppUtility.round(
-                    (selectedListOfItems[rowIndex].Quantity * selectedListOfItems[rowIndex].UnitPrice),
-                    2
-                )
-                selectedListOfItems[rowIndex].Tax = 0.0
-
-                tableViewAdapter!!.updateSingleRow(
-                    getCell(
-                        selectedListOfItems[rowIndex],
-                        DocumentRow::class.java,
-                        (columnIndex + 1),
-                        cursor
-                    ),
-                    rowIndex
-                )
-                resizeTableView()
-            }
+            })
         }
-
         tableViewAdapter!!.setAllItems(
             getColumnHeaderList(clazz),
             getRowHeaderList(rowsList.size),

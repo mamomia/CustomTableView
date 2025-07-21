@@ -21,105 +21,89 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+package com.mushi.customtableview.listener.itemclick
 
-package com.mushi.customtableview.listener.itemclick;
-
-import android.view.GestureDetector;
-import android.view.MotionEvent;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.RecyclerView;
-
-import com.mushi.customtableview.ITableView;
-import com.mushi.customtableview.adapter.recyclerview.CellRecyclerView;
-import com.mushi.customtableview.handler.SelectionHandler;
-import com.mushi.customtableview.listener.ITableViewListener;
+import android.view.GestureDetector
+import android.view.GestureDetector.SimpleOnGestureListener
+import android.view.MotionEvent
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.OnItemTouchListener
+import com.mushi.customtableview.ITableView
+import com.mushi.customtableview.adapter.recyclerview.CellRecyclerView
+import com.mushi.customtableview.handler.SelectionHandler
+import com.mushi.customtableview.listener.ITableViewListener
+import kotlin.math.abs
 
 /**
  * Created by Mushi on 22.11.2017.
  */
+abstract class AbstractItemClickListener(
+    @JvmField protected var mRecyclerView: CellRecyclerView,
+    @JvmField protected var mTableView: ITableView
+) :
+    OnItemTouchListener {
+    private var mListener: ITableViewListener? = null
+    protected var mGestureDetector: GestureDetector
+    @JvmField
+    protected var mSelectionHandler: SelectionHandler = mTableView.selectionHandler
 
-public abstract class AbstractItemClickListener implements RecyclerView.OnItemTouchListener {
-    private ITableViewListener mListener;
-    @NonNull
-    protected GestureDetector mGestureDetector;
-    @NonNull
-    protected CellRecyclerView mRecyclerView;
-    @NonNull
-    protected SelectionHandler mSelectionHandler;
-    @NonNull
-    protected ITableView mTableView;
+    init {
+        mGestureDetector =
+            GestureDetector(mRecyclerView.context, object : SimpleOnGestureListener() {
+                var start: MotionEvent? = null
 
-    public AbstractItemClickListener(@NonNull CellRecyclerView recyclerView, @NonNull ITableView tableView) {
-        this.mRecyclerView = recyclerView;
-        this.mTableView = tableView;
-        this.mSelectionHandler = tableView.getSelectionHandler();
-
-        mGestureDetector = new GestureDetector(mRecyclerView.getContext(), new GestureDetector
-                .SimpleOnGestureListener() {
-
-            @Nullable
-            MotionEvent start;
-
-            @Override
-            public boolean onSingleTapUp(MotionEvent e) {
-                return true;
-            }
-
-            @Override
-            public boolean onSingleTapConfirmed(MotionEvent e) {
-                return clickAction(mRecyclerView, e);
-            }
-
-            @Override
-            public boolean onDoubleTap(MotionEvent e) {
-                return doubleClickAction(e);
-            }
-
-            @Override
-            public boolean onDown(MotionEvent e) {
-                start = e;
-                return false;
-            }
-
-            @Override
-            public void onLongPress(MotionEvent e) {
-                // Check distance to prevent scroll to trigger the event
-                if (start != null && Math.abs(start.getRawX() - e.getRawX()) < 20 && Math.abs
-                        (start.getRawY() - e.getRawY()) < 20) {
-                    longPressAction(e);
+                override fun onSingleTapUp(e: MotionEvent): Boolean {
+                    return true
                 }
-            }
-        });
+
+                override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
+                    return clickAction(mRecyclerView, e)
+                }
+
+                override fun onDoubleTap(e: MotionEvent): Boolean {
+                    return doubleClickAction(e)
+                }
+
+                override fun onDown(e: MotionEvent): Boolean {
+                    start = e
+                    return false
+                }
+
+                override fun onLongPress(e: MotionEvent) {
+                    // Check distance to prevent scroll to trigger the event
+                    if (start != null && abs(start!!.rawX - e.rawX) < 20 && abs(
+                            start!!.rawY - e.rawY
+                        ) < 20
+                    ) {
+                        longPressAction(e)
+                    }
+                }
+            })
     }
 
-    @Override
-    public boolean onInterceptTouchEvent(@NonNull RecyclerView view, @NonNull MotionEvent e) {
-        mGestureDetector.onTouchEvent(e);
+    override fun onInterceptTouchEvent(view: RecyclerView, e: MotionEvent): Boolean {
+        mGestureDetector.onTouchEvent(e)
         // Return false intentionally
-        return false;
+        return false
     }
 
-    @Override
-    public void onTouchEvent(@NonNull RecyclerView view, @NonNull MotionEvent motionEvent) {
+    override fun onTouchEvent(view: RecyclerView, motionEvent: MotionEvent) {
     }
 
-    @Override
-    public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
+    override fun onRequestDisallowInterceptTouchEvent(disallowIntercept: Boolean) {
     }
 
-    @NonNull
-    protected ITableViewListener getTableViewListener() {
-        if (mListener == null) {
-            mListener = mTableView.getTableViewListener();
+    protected val tableViewListener: ITableViewListener
+        get() {
+            if (mListener == null) {
+                mListener = mTableView.tableViewListener
+            }
+            return mListener!!
         }
-        return mListener;
-    }
 
-    abstract protected boolean clickAction(@NonNull RecyclerView view, @NonNull MotionEvent e);
+    protected abstract fun clickAction(view: RecyclerView, e: MotionEvent): Boolean
 
-    abstract protected void longPressAction(@NonNull MotionEvent e);
+    protected abstract fun longPressAction(e: MotionEvent)
 
-    abstract protected boolean doubleClickAction(@NonNull MotionEvent e);
+    protected abstract fun doubleClickAction(e: MotionEvent): Boolean
 }

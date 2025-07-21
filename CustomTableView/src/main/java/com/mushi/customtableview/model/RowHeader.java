@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2021 Evren Mushi
+ * Copyright (c) 2021 Evren Coşkun
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -28,10 +28,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 /**
- * Created by evrencoskun on 11/06/2017.
+ * Created by mushi on 11/06/2017.
  */
 
-public class RowHeader extends TableCell {
+public class RowHeader extends Cell {
     public RowHeader(@NonNull String id, @Nullable String data) {
         super(id, data);
     }

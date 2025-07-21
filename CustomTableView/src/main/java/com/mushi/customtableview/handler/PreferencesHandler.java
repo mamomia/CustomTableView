@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2025 Mushi
+ * Copyright (c) 2021 Evren Coşkun
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -30,7 +30,7 @@ import com.mushi.customtableview.TableView;
 import com.mushi.customtableview.preference.Preferences;
 
 /**
- * Created by Mushi on 3.03.2018.
+ * Created by mushi on 3.03.2018.
  */
 
 public class PreferencesHandler {
@@ -47,19 +47,19 @@ public class PreferencesHandler {
     @NonNull
     public Preferences savePreferences() {
         Preferences preferences = new Preferences();
-        preferences.columnPosition = scrollHandler.getColumnPosition();
-        preferences.columnPositionOffset = scrollHandler.getColumnPositionOffset();
-        preferences.rowPosition = scrollHandler.getRowPosition();
-        preferences.rowPositionOffset = scrollHandler.getRowPositionOffset();
-        preferences.selectedColumnPosition = selectionHandler.getSelectedColumnPosition();
-        preferences.selectedRowPosition = selectionHandler.getSelectedRowPosition();
+        preferences.setColumnPosition(scrollHandler.getColumnPosition());
+        preferences.setColumnPositionOffset(scrollHandler.getColumnPositionOffset());
+        preferences.setRowPosition(scrollHandler.getRowPosition());
+        preferences.setRowPositionOffset(scrollHandler.getRowPositionOffset());
+        preferences.setSelectedColumnPosition(selectionHandler.getSelectedColumnPosition());
+        preferences.setSelectedRowPosition(selectionHandler.getSelectedRowPosition());
         return preferences;
     }
 
     public void loadPreferences(@NonNull Preferences preferences) {
-        scrollHandler.scrollToColumnPosition(preferences.columnPosition, preferences.columnPositionOffset);
-        scrollHandler.scrollToRowPosition(preferences.rowPosition, preferences.rowPositionOffset);
-        selectionHandler.setSelectedColumnPosition(preferences.selectedColumnPosition);
-        selectionHandler.setSelectedRowPosition(preferences.selectedRowPosition);
+        scrollHandler.scrollToColumnPosition(preferences.getColumnPosition(), preferences.getColumnPositionOffset());
+        scrollHandler.scrollToRowPosition(preferences.getRowPosition(), preferences.getRowPositionOffset());
+        selectionHandler.setSelectedColumnPosition(preferences.getSelectedColumnPosition());
+        selectionHandler.setSelectedRowPosition(preferences.getSelectedRowPosition());
     }
 }

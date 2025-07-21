@@ -21,49 +21,41 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+package com.mushi.customtableview.listener
 
-package com.mushi.customtableview.listener;
-
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView
 
 /**
- * Convenience class to extend when you are only interested in a subset of events of {@link ITableViewListener}.
+ * Convenience class to extend when you are only interested in a subset of events of [ITableViewListener].
  */
-public abstract class SimpleTableViewListener implements ITableViewListener {
-	@Override
-	public void onCellClicked(@NonNull RecyclerView.ViewHolder cellView, int column, int row) {
-	}
+abstract class SimpleTableViewListener : ITableViewListener {
+    override fun onCellClicked(cellView: RecyclerView.ViewHolder, column: Int, row: Int) {
+    }
 
-	@Override
-	public void onCellDoubleClicked(@NonNull RecyclerView.ViewHolder cellView, int column, int row) {
-	}
+    override fun onCellDoubleClicked(cellView: RecyclerView.ViewHolder, column: Int, row: Int) {
+    }
 
-	@Override
-	public void onCellLongPressed(@NonNull RecyclerView.ViewHolder cellView, int column, int row) {
-	}
+    override fun onCellLongPressed(cellView: RecyclerView.ViewHolder, column: Int, row: Int) {
+    }
 
-	@Override
-	public void onColumnHeaderClicked(@NonNull RecyclerView.ViewHolder columnHeaderView, int column) {
-	}
+    override fun onColumnHeaderClicked(columnHeaderView: RecyclerView.ViewHolder, column: Int) {
+    }
 
-	@Override
-	public void onColumnHeaderDoubleClicked(@NonNull RecyclerView.ViewHolder columnHeaderView, int column) {
-	}
+    override fun onColumnHeaderDoubleClicked(
+        columnHeaderView: RecyclerView.ViewHolder,
+        column: Int
+    ) {
+    }
 
-	@Override
-	public void onColumnHeaderLongPressed(@NonNull RecyclerView.ViewHolder columnHeaderView, int column) {
-	}
+    override fun onColumnHeaderLongPressed(columnHeaderView: RecyclerView.ViewHolder, column: Int) {
+    }
 
-	@Override
-	public void onRowHeaderClicked(@NonNull RecyclerView.ViewHolder rowHeaderView, int row) {
-	}
+    override fun onRowHeaderClicked(rowHeaderView: RecyclerView.ViewHolder, row: Int) {
+    }
 
-	@Override
-	public void onRowHeaderDoubleClicked(@NonNull RecyclerView.ViewHolder rowHeaderView, int row) {
-	}
+    override fun onRowHeaderDoubleClicked(rowHeaderView: RecyclerView.ViewHolder, row: Int) {
+    }
 
-	@Override
-	public void onRowHeaderLongPressed(@NonNull RecyclerView.ViewHolder rowHeaderView, int row) {
-	}
+    override fun onRowHeaderLongPressed(rowHeaderView: RecyclerView.ViewHolder, row: Int) {
+    }
 }

@@ -21,72 +21,53 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+package com.mushi.customtableview.sort
 
-package com.mushi.customtableview.sort;
-
-import androidx.annotation.NonNull;
-import androidx.core.util.ObjectsCompat;
-import androidx.recyclerview.widget.DiffUtil;
-
-import java.util.List;
+import androidx.core.util.ObjectsCompat
+import androidx.recyclerview.widget.DiffUtil
 
 /**
  * Created by Mushi on 23.11.2017.
  */
-
-public class ColumnSortCallback extends DiffUtil.Callback {
-    @NonNull
-    private final List<List<ISortableModel>> mOldCellItems;
-    @NonNull
-    private final List<List<ISortableModel>> mNewCellItems;
-    private final int mColumnPosition;
-
-    public ColumnSortCallback(@NonNull List<List<ISortableModel>> oldCellItems, @NonNull List<List<ISortableModel>>
-            newCellItems, int column) {
-        this.mOldCellItems = oldCellItems;
-        this.mNewCellItems = newCellItems;
-        this.mColumnPosition = column;
+class ColumnSortCallback(
+    private val mOldCellItems: List<List<ISortableModel>>,
+    private val mNewCellItems: List<List<ISortableModel>>,
+    private val mColumnPosition: Int
+) :
+    DiffUtil.Callback() {
+    override fun getOldListSize(): Int {
+        return mOldCellItems.size
     }
 
-    @Override
-    public int getOldListSize() {
-        return mOldCellItems.size();
+    override fun getNewListSize(): Int {
+        return mNewCellItems.size
     }
 
-    @Override
-    public int getNewListSize() {
-        return mNewCellItems.size();
-    }
-
-    @Override
-    public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
+    override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
         // Control for precaution from IndexOutOfBoundsException
-        if (mOldCellItems.size() > oldItemPosition && mNewCellItems.size() > newItemPosition) {
-            if (mOldCellItems.get(oldItemPosition).size() > mColumnPosition && mNewCellItems.get
-                    (newItemPosition).size() > mColumnPosition) {
+        if (mOldCellItems.size > oldItemPosition && mNewCellItems.size > newItemPosition) {
+            if (mOldCellItems[oldItemPosition].size > mColumnPosition && mNewCellItems[newItemPosition].size > mColumnPosition) {
                 // Compare ids
-                String oldId = mOldCellItems.get(oldItemPosition).get(mColumnPosition).getId();
-                String newId = mNewCellItems.get(newItemPosition).get(mColumnPosition).getId();
-                return oldId.equals(newId);
+                val oldId = mOldCellItems[oldItemPosition][mColumnPosition].id
+                val newId = mNewCellItems[newItemPosition][mColumnPosition].id
+                return oldId == newId
             }
         }
-        return false;
+        return false
     }
 
-    @Override
-    public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
+    override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
         // Control for precaution from IndexOutOfBoundsException
-        if (mOldCellItems.size() > oldItemPosition && mNewCellItems.size() > newItemPosition) {
-            if (mOldCellItems.get(oldItemPosition).size() > mColumnPosition && mNewCellItems.get
-                    (newItemPosition).size() > mColumnPosition) {
+        if (mOldCellItems.size > oldItemPosition && mNewCellItems.size > newItemPosition) {
+            if (mOldCellItems[oldItemPosition].size > mColumnPosition && mNewCellItems[newItemPosition].size > mColumnPosition) {
                 // Compare contents
-                Object oldContent = mOldCellItems.get(oldItemPosition).get(mColumnPosition)
-                        .getContent();
-                Object newContent = mNewCellItems.get(newItemPosition).get(mColumnPosition)
-                        .getContent();
-                return ObjectsCompat.equals(oldContent, newContent);
+                val oldContent = mOldCellItems[oldItemPosition][mColumnPosition]
+                    .content
+                val newContent = mNewCellItems[newItemPosition][mColumnPosition]
+                    .content
+                return ObjectsCompat.equals(oldContent, newContent)
             }
         }
-        return false;
+        return false
     }
 }

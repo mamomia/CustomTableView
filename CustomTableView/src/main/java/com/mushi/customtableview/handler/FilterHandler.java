@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2025 Mushi
+ * Copyright (c) 2021 Evren Coşkun
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -35,6 +35,7 @@ import com.mushi.customtableview.filter.FilterChangedListener;
 import com.mushi.customtableview.filter.FilterItem;
 import com.mushi.customtableview.filter.FilterType;
 import com.mushi.customtableview.filter.IFilterableModel;
+import com.mushi.customtableview.sort.ISortableModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -74,14 +75,12 @@ public class FilterHandler<T extends IFilterableModel> {
         } else {
             for (int x = 0; x < filter.getFilterItems().size(); ) {
                 final FilterItem filterItem = filter.getFilterItems().get(x);
-                if (filterItem.getFilterType().equals(FilterType.ALL)) {
+                if (filterItem.filterType.equals(FilterType.ALL)) {
                     for (List<T> itemsList : originalCellData) {
                         for (T item : itemsList) {
-                            if (item
-                                    .getFilterableKeyword()
+                            if (item.getFilterableKeyword()
                                     .toLowerCase()
-                                    .contains(filterItem
-                                            .getFilter()
+                                    .contains(filterItem.filter
                                             .toLowerCase())) {
                                 filteredCellList.add(itemsList);
                                 filteredRowList.add(originalRowData.get(filteredCellList.indexOf(itemsList)));
@@ -92,12 +91,9 @@ public class FilterHandler<T extends IFilterableModel> {
                 } else {
                     for (List<T> itemsList : originalCellData) {
                         if (itemsList
-                                .get(filterItem
-                                        .getColumn())
-                                .getFilterableKeyword()
+                                .get(filterItem.column).getFilterableKeyword()
                                 .toLowerCase()
-                                .contains(filterItem
-                                        .getFilter()
+                                .contains(filterItem.filter
                                         .toLowerCase())) {
                             filteredCellList.add(itemsList);
                             filteredRowList.add(originalRowData.get(filteredCellList.indexOf(itemsList)));

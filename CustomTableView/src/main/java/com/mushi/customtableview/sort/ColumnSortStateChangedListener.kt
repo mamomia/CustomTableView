@@ -21,20 +21,16 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+package com.mushi.customtableview.sort
 
-package com.mushi.customtableview.sort;
-
-import androidx.annotation.NonNull;
-
-public abstract class ColumnSortStateChangedListener {
-
+abstract class ColumnSortStateChangedListener {
     /**
      * Dispatches sorting changes on a column to listeners.
      *
      * @param column    Column to be sorted.
      * @param sortState SortState of the column to be sorted.
      */
-    public void onColumnSortStatusChanged(int column, @NonNull SortState sortState) {
+    open fun onColumnSortStatusChanged(column: Int, sortState: SortState) {
     }
 
     /**
@@ -42,6 +38,6 @@ public abstract class ColumnSortStateChangedListener {
      *
      * @param sortState SortState of the row header column.
      */
-    public void onRowHeaderSortStatusChanged(@NonNull SortState sortState) {
+    open fun onRowHeaderSortStatusChanged(sortState: SortState) {
     }
 }

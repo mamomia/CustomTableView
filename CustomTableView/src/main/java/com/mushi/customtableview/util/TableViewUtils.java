@@ -38,9 +38,7 @@ import com.mushi.customtableview.annotation.ColumnIgnore;
 import com.mushi.customtableview.annotation.ColumnPosition;
 import com.mushi.customtableview.model.ColumnHeader;
 import com.mushi.customtableview.model.RowHeader;
-import com.mushi.customtableview.model.TableCell;
-
-import org.jetbrains.annotations.NotNull;
+import com.mushi.customtableview.model.Cell;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -60,7 +58,7 @@ public class TableViewUtils {
      */
     public static void setWidth(@NonNull View view, int width) {
         // Change width value from params
-        ((RecyclerView.LayoutParams) view.getLayoutParams()).width = width;
+        view.getLayoutParams().width = width;
 
         int widthMeasureSpec = View.MeasureSpec.makeMeasureSpec(width, View.MeasureSpec.EXACTLY);
         int heightMeasureSpec = View.MeasureSpec.makeMeasureSpec(view.getMeasuredHeight(), View
@@ -70,13 +68,13 @@ public class TableViewUtils {
         view.requestLayout();
     }
 
-    public static <T> List<List<TableCell>> getCellList(List<T> dataList, Class<T> clazz) {
+    public static <T> List<List<Cell>> getCellList(List<T> dataList, Class<T> clazz) {
         try {
-            List<List<TableCell>> list = new ArrayList<>();
+            List<List<Cell>> list = new ArrayList<>();
             if (dataList.isEmpty()) return list;
             for (T item : dataList) {
                 int id = 0;
-                List<TableCell> cellList = new ArrayList<>();
+                List<Cell> cellList = new ArrayList<>();
                 List<Field> fields = sortListByAnnotation(clazz.getDeclaredFields());
                 for (Field field : fields) {
                     CellFieldType columnType = field.getAnnotation(ColumnPosition.class).columnType();
@@ -88,7 +86,7 @@ public class TableViewUtils {
                         field.setAccessible(true);
                         Object text = field.get(item);
                         id++;
-                        cellList.add(new TableCell(String.valueOf(id), text, columnType, inputType));
+                        cellList.add(new Cell(String.valueOf(id), text, columnType, inputType));
                     }
                 }
                 list.add(cellList);
@@ -100,14 +98,14 @@ public class TableViewUtils {
         }
     }
 
-    public static <T> List<TableCell> getCell(T item, Class<T> clazz, int position) {
+    public static <T> List<Cell> getCell(T item, Class<T> clazz, int position) {
         return getCell(item, clazz, position, 1);
     }
 
-    public static <T> List<TableCell> getCell(T item, Class<T> clazz, int position, int cursor) {
+    public static <T> List<Cell> getCell(T item, Class<T> clazz, int position, int cursor) {
         try {
             int id = 0;
-            List<TableCell> cellList = new ArrayList<>();
+            List<Cell> cellList = new ArrayList<>();
             List<Field> fields = sortListByAnnotation(clazz.getDeclaredFields());
             for (Field field : fields) {
                 CellFieldType columnType = field.getAnnotation(ColumnPosition.class).columnType();
@@ -120,7 +118,7 @@ public class TableViewUtils {
                     field.setAccessible(true);
                     Object text = field.get(item);
                     id++;
-                    cellList.add(new TableCell(String.valueOf(id), text, columnType, inputType, cursor, (position == id)));
+                    cellList.add(new Cell(String.valueOf(id), text, columnType, inputType, cursor, (position == id)));
                 }
             }
             return cellList;

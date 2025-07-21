@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2025 Mushi
+ * Copyright (c) 2021 Evren Coşkun
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -127,8 +127,7 @@ public class Pagination implements IPagination {
             end = currentPageCellData.size();
         } else {
             start = (currentPage * itemsPerPage) - itemsPerPage;
-            end = (currentPage * itemsPerPage) > originalCellData.size() ?
-                    originalCellData.size() : (currentPage * itemsPerPage);
+            end = Math.min((currentPage * itemsPerPage), originalCellData.size());
 
             for (int x = start; x < end; x++) {
                 currentPageCellData.add(originalCellData.get(x));
@@ -224,7 +223,7 @@ public class Pagination implements IPagination {
 
     @NonNull
     private final FilterChangedListener<ISortableModel> filterChangedListener =
-            new FilterChangedListener<ISortableModel>() {
+            new FilterChangedListener<>() {
                 @Override
                 public void onFilterChanged(@NonNull List<List<ISortableModel>> filteredCellItems, @NonNull List<ISortableModel> filteredRowHeaderItems) {
                     originalCellData = new ArrayList<>(filteredCellItems);

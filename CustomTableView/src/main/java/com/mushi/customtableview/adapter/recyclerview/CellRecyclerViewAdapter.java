@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2025 Mushi
+ * Copyright (c) 2021 Evren Coşkun
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -45,7 +45,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Mushi on 10/06/2017.
+ * Created by mushi on 10/06/2017.
  */
 
 public class CellRecyclerViewAdapter<C> extends AbstractRecyclerViewAdapter<C> {

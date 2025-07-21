@@ -21,84 +21,71 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+package com.mushi.customtableview.preference
 
-package com.mushi.customtableview.preference;
-
-import android.os.Parcel;
-import android.os.Parcelable;
-
-import androidx.annotation.NonNull;
+import android.os.Parcel
+import android.os.Parcelable
 
 /**
  * Created by Mushi on 4.03.2018.
  */
+open class Preferences : Parcelable {
+    var rowPosition: Int = 0
+    var rowPositionOffset: Int = 0
+    var columnPosition: Int = 0
+    var columnPositionOffset: Int = 0
+    var selectedRowPosition: Int = 0
+    var selectedColumnPosition: Int = 0
 
-public class Preferences implements Parcelable {
+    constructor()
 
-    public int rowPosition;
-    public int rowPositionOffset;
-    public int columnPosition;
-    public int columnPositionOffset;
-    public int selectedRowPosition;
-    public int selectedColumnPosition;
-
-    public Preferences() {
+    protected constructor(`in`: Parcel) {
+        rowPosition = `in`.readInt()
+        rowPositionOffset = `in`.readInt()
+        columnPosition = `in`.readInt()
+        columnPositionOffset = `in`.readInt()
+        selectedRowPosition = `in`.readInt()
+        selectedColumnPosition = `in`.readInt()
     }
-
-    protected Preferences(Parcel in) {
-        rowPosition = in.readInt();
-        rowPositionOffset = in.readInt();
-        columnPosition = in.readInt();
-        columnPositionOffset = in.readInt();
-        selectedRowPosition = in.readInt();
-        selectedColumnPosition = in.readInt();
-    }
-
-    @NonNull
-    public static final Creator<Preferences> CREATOR = new Creator<Preferences>() {
-        @NonNull
-        @Override
-        public Preferences createFromParcel(Parcel in) {
-            return new Preferences(in);
-        }
-
-        @NonNull
-        @Override
-        public Preferences[] newArray(int size) {
-            return new Preferences[size];
-        }
-    };
-
 
     /**
      * Describe the kinds of special objects contained in this Parcelable
      * instance's marshaled representation. For example, if the object will
-     * include a file descriptor in the output of {@link #writeToParcel(Parcel, int)},
+     * include a file descriptor in the output of [.writeToParcel],
      * the return value of this method must include the
-     * {@link #CONTENTS_FILE_DESCRIPTOR} bit.
+     * [.CONTENTS_FILE_DESCRIPTOR] bit.
      *
      * @return a bitmask indicating the set of special object types marshaled by this Parcelable
      * object instance.
      */
-    @Override
-    public int describeContents() {
-        return 0;
+    override fun describeContents(): Int {
+        return 0
     }
 
     /**
      * Flatten this object in to a Parcel.
      *
      * @param dest  The Parcel in which the object should be written.
-     * @param flags Additional flags about how the object should be written. May be 0 or {@link
-     *              #PARCELABLE_WRITE_RETURN_VALUE}.
+     * @param flags Additional flags about how the object should be written. May be 0 or [              ][.PARCELABLE_WRITE_RETURN_VALUE].
      */
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(rowPosition);
-        dest.writeInt(rowPositionOffset);
-        dest.writeInt(columnPosition);
-        dest.writeInt(columnPositionOffset);
-        dest.writeInt(selectedRowPosition);
-        dest.writeInt(selectedColumnPosition);
+    override fun writeToParcel(dest: Parcel, flags: Int) {
+        dest.writeInt(rowPosition)
+        dest.writeInt(rowPositionOffset)
+        dest.writeInt(columnPosition)
+        dest.writeInt(columnPositionOffset)
+        dest.writeInt(selectedRowPosition)
+        dest.writeInt(selectedColumnPosition)
+    }
+
+    companion object {
+        val CREATOR: Parcelable.Creator<Preferences> = object : Parcelable.Creator<Preferences> {
+            override fun createFromParcel(`in`: Parcel): Preferences {
+                return Preferences(`in`)
+            }
+
+            override fun newArray(size: Int): Array<Preferences?> {
+                return arrayOfNulls(size)
+            }
+        }
     }
 }

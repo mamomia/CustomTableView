@@ -21,18 +21,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+package com.mushi.customtableview.filter
 
-package com.mushi.customtableview.filter;
-
-import androidx.annotation.NonNull;
-
-public interface IFilterableModel {
-
+interface IFilterableModel {
     /**
      * Filterable query string for this object.
      *
      * @return query string for this object to be used in filtering.
      */
-    @NonNull
-    String getFilterableKeyword();
+    var filterableKeyword: String
 }

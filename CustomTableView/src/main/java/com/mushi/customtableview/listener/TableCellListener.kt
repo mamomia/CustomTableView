@@ -1,5 +1,7 @@
-package com.mushi.customtableview.listener;
+package com.mushi.customtableview.listener
 
-public interface TableCellListener {
-    void onColumnUpdated(String newData, int column, int row, int cursor);
+import androidx.recyclerview.widget.RecyclerView
+
+interface TableCellListener {
+    fun onCellClicked(cellView: RecyclerView.ViewHolder, column: Int, row: Int)
 }

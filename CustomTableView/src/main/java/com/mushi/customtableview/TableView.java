@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2025 Mushi
+ * Copyright (c) 2021 Evren Coşkun
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -65,7 +65,7 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 /**
- * Created by Mushi on 8/7/2025.
+ * Created by mushi on 11/06/2017.
  */
 
 public class TableView extends FrameLayout implements ITableView {
@@ -873,25 +873,12 @@ public class TableView extends FrameLayout implements ITableView {
     }
 
     public int getGravity() {
-        int gravity;
-        switch (mCornerViewLocation) {
-            case TOP_LEFT:
-                gravity = Gravity.TOP | Gravity.LEFT;
-                break;
-            case TOP_RIGHT:
-                gravity = Gravity.TOP | Gravity.RIGHT;
-                break;
-            case BOTTOM_LEFT:
-                gravity = Gravity.BOTTOM | Gravity.LEFT;
-                break;
-            case BOTTOM_RIGHT:
-                gravity = Gravity.BOTTOM | Gravity.RIGHT;
-                break;
-            default:
-                gravity = Gravity.TOP | Gravity.LEFT;
-                break;
-        }
-        return gravity;
+        return switch (mCornerViewLocation) {
+            case TOP_RIGHT -> Gravity.TOP | Gravity.RIGHT;
+            case BOTTOM_LEFT -> Gravity.BOTTOM | Gravity.LEFT;
+            case BOTTOM_RIGHT -> Gravity.BOTTOM | Gravity.RIGHT;
+            default -> Gravity.TOP | Gravity.LEFT;
+        };
     }
 
     public boolean getReverseLayout() {
@@ -914,14 +901,12 @@ public class TableView extends FrameLayout implements ITableView {
     @Override
     protected void onRestoreInstanceState(Parcelable state) {
 
-        if (!(state instanceof SavedState)) {
+        if (!(state instanceof SavedState savedState)) {
             super.onRestoreInstanceState(state);
             return;
         }
 
-        SavedState savedState = (SavedState) state;
         super.onRestoreInstanceState(savedState.getSuperState());
-
         // Reload the preferences
         mPreferencesHandler.loadPreferences(savedState.preferences);
     }

@@ -21,137 +21,130 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+package com.mushi.customtableview.layoutmanager
 
-package com.mushi.customtableview.layoutmanager;
-
-import android.content.Context;
-import android.util.SparseIntArray;
-import android.view.View;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.LinearLayoutManager;
-
-import com.mushi.customtableview.ITableView;
-import com.mushi.customtableview.adapter.recyclerview.holder.AbstractViewHolder;
-import com.mushi.customtableview.util.TableViewUtils;
+import android.content.Context
+import android.util.SparseIntArray
+import android.view.View
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.mushi.customtableview.ITableView
+import com.mushi.customtableview.adapter.recyclerview.holder.AbstractViewHolder
+import com.mushi.customtableview.util.TableViewUtils
 
 /**
  * Created by Mushi on 30/07/2017.
  */
-
-public class ColumnHeaderLayoutManager extends LinearLayoutManager {
+class ColumnHeaderLayoutManager(context: Context, private val mTableView: ITableView) :
+    LinearLayoutManager(context) {
     //private SparseArray<Integer> mCachedWidthList;
-    @NonNull
-    private final SparseIntArray mCachedWidthList = new SparseIntArray();
-    @NonNull
-    private final ITableView mTableView;
+    private val mCachedWidthList = SparseIntArray()
 
-    public ColumnHeaderLayoutManager(@NonNull Context context, @NonNull ITableView tableView) {
-        super(context);
-        mTableView = tableView;
-
-        this.setOrientation(ColumnHeaderLayoutManager.HORIZONTAL);
+    init {
+        this.orientation = HORIZONTAL
     }
 
-    @Override
-    public void measureChildWithMargins(@NonNull View child, int widthUsed, int heightUsed) {
-        super.measureChildWithMargins(child, widthUsed, heightUsed);
+    override fun measureChildWithMargins(child: View, widthUsed: Int, heightUsed: Int) {
+        super.measureChildWithMargins(child, widthUsed, heightUsed)
 
         // If has fixed width is true, than calculation of the column width is not necessary.
         if (mTableView.hasFixedWidth()) {
-            return;
+            return
         }
 
-        measureChild(child, widthUsed, heightUsed);
+        measureChild(child, widthUsed, heightUsed)
     }
 
-    @Override
-    public void measureChild(@NonNull View child, int widthUsed, int heightUsed) {
+    override fun measureChild(child: View, widthUsed: Int, heightUsed: Int) {
         // If has fixed width is true, than calculation of the column width is not necessary.
         if (mTableView.hasFixedWidth()) {
-            super.measureChild(child, widthUsed, heightUsed);
-            return;
+            super.measureChild(child, widthUsed, heightUsed)
+            return
         }
 
-        int position = getPosition(child);
-        int cacheWidth = getCacheWidth(position);
+        val position = getPosition(child)
+        val cacheWidth = getCacheWidth(position)
 
         // If the width value of the cell has already calculated, then set the value
         if (cacheWidth != -1) {
-            TableViewUtils.setWidth(child, cacheWidth);
+            TableViewUtils.setWidth(child, cacheWidth)
         } else {
-            super.measureChild(child, widthUsed, heightUsed);
+            super.measureChild(child, widthUsed, heightUsed)
         }
     }
 
-    public void setCacheWidth(int position, int width) {
-        mCachedWidthList.put(position, width);
+    fun setCacheWidth(position: Int, width: Int) {
+        mCachedWidthList.put(position, width)
     }
 
-    public int getCacheWidth(int position) {
-        return mCachedWidthList.get(position, -1);
+    fun getCacheWidth(position: Int): Int {
+        return mCachedWidthList[position, -1]
     }
 
-    public int getFirstItemLeft() {
-        View firstColumnHeader = findViewByPosition(findFirstVisibleItemPosition());
-        return firstColumnHeader.getLeft();
-    }
+    val firstItemLeft: Int
+        get() {
+            val firstColumnHeader =
+                findViewByPosition(findFirstVisibleItemPosition())
+            return firstColumnHeader!!.left
+        }
 
     /**
      * Helps to recalculate the width value of the cell that is located in given position.
      */
-    public void removeCachedWidth(int position) {
-        mCachedWidthList.removeAt(position);
+    fun removeCachedWidth(position: Int) {
+        mCachedWidthList.removeAt(position)
     }
 
     /**
      * Clears the widths which have been calculated and reused.
      */
-    public void clearCachedWidths() {
-        mCachedWidthList.clear();
+    fun clearCachedWidths() {
+        mCachedWidthList.clear()
     }
 
-    public void customRequestLayout() {
-        int left = getFirstItemLeft();
-        int right;
-        for (int i = findFirstVisibleItemPosition(); i < findLastVisibleItemPosition() + 1; i++) {
-
+    fun customRequestLayout() {
+        var left = firstItemLeft
+        var right: Int
+        for (i in findFirstVisibleItemPosition()..<findLastVisibleItemPosition() + 1) {
             // Column headers should have been already calculated.
-            right = left + getCacheWidth(i);
 
-            View columnHeader = findViewByPosition(i);
-            columnHeader.setLeft(left);
-            columnHeader.setRight(right);
+            right = left + getCacheWidth(i)
 
-            layoutDecoratedWithMargins(columnHeader, columnHeader.getLeft(), columnHeader.getTop
-                    (), columnHeader.getRight(), columnHeader.getBottom());
+            val columnHeader = findViewByPosition(i)
+            columnHeader!!.left = left
+            columnHeader.right = right
+
+            layoutDecoratedWithMargins(
+                columnHeader,
+                columnHeader.left,
+                columnHeader.top,
+                columnHeader.right,
+                columnHeader.bottom
+            )
 
             // + 1 is for decoration item.
-            left = right + 1;
+            left = right + 1
         }
     }
 
-    @NonNull
-    public AbstractViewHolder[] getVisibleViewHolders() {
-        int visibleChildCount = findLastVisibleItemPosition() - findFirstVisibleItemPosition() + 1;
-        int index = 0;
+    val visibleViewHolders: Array<AbstractViewHolder?>
+        get() {
+            val visibleChildCount =
+                findLastVisibleItemPosition() - findFirstVisibleItemPosition() + 1
+            var index = 0
 
-        AbstractViewHolder[] views = new AbstractViewHolder[visibleChildCount];
-        for (int i = findFirstVisibleItemPosition(); i < findLastVisibleItemPosition() + 1; i++) {
+            val views =
+                arrayOfNulls<AbstractViewHolder>(visibleChildCount)
+            for (i in findFirstVisibleItemPosition()..<findLastVisibleItemPosition() + 1) {
+                views[index] = mTableView.columnHeaderRecyclerView
+                    .findViewHolderForAdapterPosition(i) as AbstractViewHolder?
 
-            views[index] = (AbstractViewHolder) mTableView.getColumnHeaderRecyclerView()
-                    .findViewHolderForAdapterPosition(i);
-
-            index++;
+                index++
+            }
+            return views
         }
-        return views;
-    }
 
-    @Nullable
-    public AbstractViewHolder getViewHolder(int xPosition) {
-        return (AbstractViewHolder) mTableView.getColumnHeaderRecyclerView()
-                .findViewHolderForAdapterPosition(xPosition);
+    fun getViewHolder(xPosition: Int): AbstractViewHolder? {
+        return mTableView.columnHeaderRecyclerView
+            .findViewHolderForAdapterPosition(xPosition) as AbstractViewHolder?
     }
-
 }

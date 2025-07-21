@@ -21,84 +21,72 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+package com.mushi.customtableview.popup
 
-package com.mushi.customtableview.popup;
-
-import android.content.Context;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.widget.PopupMenu;
-
-import androidx.annotation.NonNull;
-
-import com.mushi.customtableview.TableView;
-import com.mushi.customtableview.sort.SortState;
-import com.mushi.customtableview.R;
-import com.mushi.customtableview.holder.ColumnHeaderViewHolder;
+import android.view.Menu
+import android.view.MenuItem
+import android.widget.PopupMenu
+import com.mushi.customtableview.R
+import com.mushi.customtableview.TableView
+import com.mushi.customtableview.holder.ColumnHeaderViewHolder
+import com.mushi.customtableview.sort.SortState
+import androidx.core.view.get
 
 /**
- * Created by evrencoskun on 24.12.2017.
+ * Created by Mushi on 24.12.2017.
  */
+class ColumnHeaderLongPressPopup(
+    viewHolder: ColumnHeaderViewHolder,
+    private val mTableView: TableView
+) :
+    PopupMenu(viewHolder.itemView.context, viewHolder.itemView), PopupMenu.OnMenuItemClickListener {
+    private val mXPosition = viewHolder.adapterPosition
 
-public class ColumnHeaderLongPressPopup extends PopupMenu implements PopupMenu
-        .OnMenuItemClickListener {
-    // Menu Item constants
-    private static final int ASCENDING = 1;
-    private static final int DESCENDING = 2;
-
-    @NonNull
-    private final TableView mTableView;
-    private final int mXPosition;
-
-    public ColumnHeaderLongPressPopup(@NonNull ColumnHeaderViewHolder viewHolder, @NonNull TableView tableView) {
-        super(viewHolder.itemView.getContext(), viewHolder.itemView);
-        this.mTableView = tableView;
-        this.mXPosition = viewHolder.getAdapterPosition();
-
-        initialize();
+    init {
+        initialize()
     }
 
-    private void initialize() {
-        createMenuItem();
-        changeMenuItemVisibility();
+    private fun initialize() {
+        createMenuItem()
+        changeMenuItemVisibility()
 
-        this.setOnMenuItemClickListener(this);
+        this.setOnMenuItemClickListener(this)
     }
 
-    private void createMenuItem() {
-        Context context = mTableView.getContext();
-        this.getMenu().add(Menu.NONE, ASCENDING, 0, context.getString(R.string.sort_ascending));
-        this.getMenu().add(Menu.NONE, DESCENDING, 1, context.getString(R.string.sort_descending));
+    private fun createMenuItem() {
+        val context = mTableView.context
+        this.menu.add(Menu.NONE, ASCENDING, 0, context.getString(R.string.sort_ascending))
+        this.menu.add(Menu.NONE, DESCENDING, 1, context.getString(R.string.sort_descending))
+
         // add new one ...
-
     }
 
-    private void changeMenuItemVisibility() {
+    private fun changeMenuItemVisibility() {
         // Determine which one shouldn't be visible
-        SortState sortState = mTableView.getSortingStatus(mXPosition);
+        val sortState = mTableView.getSortingStatus(mXPosition)
         if (sortState == SortState.UNSORTED) {
             // Show others
         } else if (sortState == SortState.DESCENDING) {
             // Hide DESCENDING menu item
-            getMenu().getItem(1).setVisible(false);
+            menu[1].setVisible(false)
         } else if (sortState == SortState.ASCENDING) {
             // Hide ASCENDING menu item
-            getMenu().getItem(0).setVisible(false);
+            menu[0].setVisible(false)
         }
     }
 
-    @Override
-    public boolean onMenuItemClick(MenuItem menuItem) {
+    override fun onMenuItemClick(menuItem: MenuItem): Boolean {
         // Note: item id is index of menu item..
-        switch (menuItem.getItemId()) {
-            case ASCENDING:
-                mTableView.sortColumn(mXPosition, SortState.ASCENDING);
-                break;
-            case DESCENDING:
-                mTableView.sortColumn(mXPosition, SortState.DESCENDING);
-                break;
+        when (menuItem.itemId) {
+            ASCENDING -> mTableView.sortColumn(mXPosition, SortState.ASCENDING)
+            DESCENDING -> mTableView.sortColumn(mXPosition, SortState.DESCENDING)
         }
-        return true;
+        return true
     }
 
+    companion object {
+        // Menu Item constants
+        private const val ASCENDING = 1
+        private const val DESCENDING = 2
+    }
 }

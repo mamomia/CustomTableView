@@ -10,7 +10,8 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.CustomTableView">
+        android:theme="@style/Theme.CustomTableView"
+        tools:overrideLibrary="androidx.test.ext.junit">
         <activity
             android:name="com.mushi.sample.DashboardActivity"
             android:configChanges="keyboardHidden|orientation"

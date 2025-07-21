@@ -21,41 +21,31 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+package com.mushi.customtableview.holder
 
-package com.mushi.customtableview.holder;
+import android.view.View
+import android.widget.ImageView
+import android.widget.LinearLayout
+import com.mushi.customtableview.R
+import com.mushi.customtableview.adapter.recyclerview.holder.AbstractViewHolder
+import com.mushi.customtableview.model.Cell
 
-import android.util.Log;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
+class ActionCellViewHolder(itemView: View) : AbstractViewHolder(itemView) {
+    val cell_image: ImageView =
+        itemView.findViewById(R.id.cell_image)
+    private val cell_container: LinearLayout =
+        itemView.findViewById(R.id.cell_container)
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
-import com.mushi.customtableview.R;
-import com.mushi.customtableview.model.TableCell;
-import com.mushi.customtableview.adapter.recyclerview.holder.AbstractViewHolder;
-
-public class ActionCellViewHolder extends AbstractViewHolder {
-    private static final String TAG = ActionCellViewHolder.class.getSimpleName();
-
-    @NonNull
-    public final ImageView cell_image;
-    @NonNull
-    private final LinearLayout cell_container;
-
-    public ActionCellViewHolder(@NonNull View itemView) {
-        super(itemView);
-        cell_image = itemView.findViewById(R.id.cell_image);
-        cell_container = itemView.findViewById(R.id.cell_container);
+    fun setCell(tableCell: Cell?) {
+        try {
+            val actionIcon = tableCell!!.data as Int
+            cell_image.setImageResource(actionIcon)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
-    public void setCell(@Nullable TableCell tableCell) {
-        try {
-            int actionIcon = (int) tableCell.getData();
-            cell_image.setImageResource(actionIcon);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    companion object {
+        private val TAG: String = ActionCellViewHolder::class.java.simpleName
     }
 }

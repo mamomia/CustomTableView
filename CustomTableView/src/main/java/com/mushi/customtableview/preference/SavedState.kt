@@ -21,49 +21,39 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+package com.mushi.customtableview.preference
 
-package com.mushi.customtableview.preference;
-
-import android.os.Parcel;
-import android.os.Parcelable;
-import android.view.View;
-
-import androidx.annotation.NonNull;
+import android.os.Parcel
+import android.os.Parcelable
+import android.view.View
 
 /**
  * Created by Mushi on 4.03.2018.
  */
+class SavedState : View.BaseSavedState {
+    @JvmField
+    var preferences: Preferences? = null
 
-public class SavedState extends View.BaseSavedState {
+    constructor(superState: Parcelable?) : super(superState)
 
-    public Preferences preferences;
-
-    public SavedState(Parcelable superState) {
-        super(superState);
+    private constructor(`in`: Parcel) : super(`in`) {
+        preferences = `in`.readParcelable(Preferences::class.java.classLoader)
     }
 
-    private SavedState(Parcel in) {
-        super(in);
-        preferences = in.readParcelable(Preferences.class.getClassLoader());
+    override fun writeToParcel(out: Parcel, flags: Int) {
+        super.writeToParcel(out, flags)
+        out.writeParcelable(preferences, flags)
     }
 
-    @Override
-    public void writeToParcel(Parcel out, int flags) {
-        super.writeToParcel(out, flags);
-        out.writeParcelable(preferences, flags);
-    }
+    companion object {
+        val CREATOR: Parcelable.Creator<SavedState> = object : Parcelable.Creator<SavedState> {
+            override fun createFromParcel(`in`: Parcel): SavedState {
+                return SavedState(`in`)
+            }
 
-    @NonNull
-    public static final Parcelable.Creator<SavedState> CREATOR = new Parcelable
-            .Creator<SavedState>() {
-        @NonNull
-        public SavedState createFromParcel(Parcel in) {
-            return new SavedState(in);
+            override fun newArray(size: Int): Array<SavedState?> {
+                return arrayOfNulls(size)
+            }
         }
-
-        @NonNull
-        public SavedState[] newArray(int size) {
-            return new SavedState[size];
-        }
-    };
+    }
 }

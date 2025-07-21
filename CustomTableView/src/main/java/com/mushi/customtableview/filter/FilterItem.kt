@@ -21,35 +21,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+package com.mushi.customtableview.filter
 
-package com.mushi.customtableview.filter;
-
-import androidx.annotation.NonNull;
-
-public class FilterItem {
-    @NonNull
-    private final FilterType filterType;
-    @NonNull
-    private final String filter;
-    private final int column;
-
-    public FilterItem(@NonNull FilterType type, int column, @NonNull String filter) {
-        this.filterType = type;
-        this.column = column;
-        this.filter = filter;
-    }
-
-    @NonNull
-    public FilterType getFilterType() {
-        return filterType;
-    }
-
-    @NonNull
-    public String getFilter() {
-        return filter;
-    }
-
-    public int getColumn() {
-        return column;
-    }
-}
+class FilterItem(
+    @JvmField val filterType: FilterType,
+    @JvmField val column: Int,
+    @JvmField val filter: String
+)

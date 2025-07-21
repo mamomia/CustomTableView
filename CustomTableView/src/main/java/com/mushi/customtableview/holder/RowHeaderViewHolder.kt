@@ -21,27 +21,18 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+package com.mushi.customtableview.holder
 
-package com.mushi.customtableview.holder;
-
-import android.view.View;
-import android.widget.TextView;
-
-import androidx.annotation.NonNull;
-
-import com.mushi.customtableview.R;
-import com.mushi.customtableview.adapter.recyclerview.holder.AbstractViewHolder;
+import android.view.View
+import android.widget.TextView
+import com.mushi.customtableview.R
+import com.mushi.customtableview.adapter.recyclerview.holder.AbstractViewHolder
 
 /**
- * Created by evrencoskun on 23/10/2017.
+ * Created by Mushi on 23/10/2017.
  */
-
-public class RowHeaderViewHolder extends AbstractViewHolder {
-    @NonNull
-    public final TextView row_header_textview;
-
-    public RowHeaderViewHolder(@NonNull View itemView) {
-        super(itemView);
-        row_header_textview = itemView.findViewById(R.id.row_header_textview);
-    }
+class RowHeaderViewHolder(itemView: View) : AbstractViewHolder(itemView) {
+    @JvmField
+    val row_header_textview: TextView =
+        itemView.findViewById(R.id.row_header_textview)
 }

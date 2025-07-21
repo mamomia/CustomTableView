@@ -21,38 +21,24 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
-package com.mushi.customtableview.sort;
-
-import androidx.annotation.NonNull;
-
-import java.util.Comparator;
-import java.util.List;
+package com.mushi.customtableview.sort
 
 /**
  * Created by Mushi on 25.11.2017.
  */
+class ColumnSortComparator(
+    private val xPosition: Int,
+    private val sortState: SortState
+) : AbstractSortComparator(), Comparator<List<ISortableModel>> {
 
-public class ColumnSortComparator extends AbstractSortComparator implements Comparator<List<ISortableModel>> {
+    override fun compare(t1: List<ISortableModel>, t2: List<ISortableModel>): Int {
+        val o1 = t1[xPosition].content
+        val o2 = t2[xPosition].content
 
-    private final int mXPosition;
-
-    public ColumnSortComparator(int xPosition, @NonNull SortState sortState) {
-        this.mXPosition = xPosition;
-        this.mSortState = sortState;
-    }
-
-    @Override
-    public int compare(List<ISortableModel> t1, List<ISortableModel> t2) {
-        Object o1 = t1.get(mXPosition).getContent();
-        Object o2 = t2.get(mXPosition).getContent();
-
-        if (mSortState == SortState.DESCENDING) {
-            return compareContent(o2, o1);
+        return if (sortState == SortState.DESCENDING) {
+            compareContent(o2, o1)
         } else {
-            // Default sorting process is ASCENDING
-            return compareContent(o1, o2);
+            compareContent(o1, o2)
         }
     }
-
 }

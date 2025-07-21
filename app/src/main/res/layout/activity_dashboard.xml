@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background"
-    android:padding="@dimen/large_margin"
+    android:padding="@dimen/standard_padding"
     tools:context="com.mushi.sample.DashboardActivity">
 
     <LinearLayout

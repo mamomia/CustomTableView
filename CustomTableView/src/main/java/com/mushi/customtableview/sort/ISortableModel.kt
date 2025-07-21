@@ -21,20 +21,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
-package com.mushi.customtableview.sort;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+package com.mushi.customtableview.sort
 
 /**
  * Created by Mushi on 24.11.2017.
  */
+interface ISortableModel {
 
-public interface ISortableModel {
-    @NonNull
-    String getId();
+    var id: String
 
-    @Nullable
-    Object getContent();
+    var content: Any?
 }
