@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="header_shadow_size">5dp</dimen>
+    <dimen name="cell_height">40dp</dimen>
+    <dimen name="row_header_width">50dp</dimen>
+    <dimen name="heading_text_size">@dimen/text_size_small</dimen>
+    <dimen name="cell_text_size">@dimen/text_size_small</dimen>
+    <dimen name="button_size">40dp</dimen>
+
+    <dimen name="txt_size_3">15sp</dimen>
+
+    <dimen name="input_height_standard">50dp</dimen>
+    <dimen name="text_size_smallest">10sp</dimen>
+    <dimen name="text_size_small">12sp</dimen>
+    <dimen name="text_size_normal">15sp</dimen>
+    <dimen name="text_size_large">20sp</dimen>
+    <dimen name="text_size_extra_large">30sp</dimen>
+    <dimen name="sync_layout_height">60sp</dimen>
+
+    <!-- Overriding the default values of the tableView -->
+    <dimen name="large_margin">30dp</dimen>
+    <dimen name="standard_margin">10dp</dimen>
+    <dimen name="standard_padding">10dp</dimen>
+    <dimen name="small_padding">5dp</dimen>
+    <dimen name="spinner_padding">1dp</dimen>
+
+    <dimen name="default_row_header_width">55dp</dimen>
+    <dimen name="default_column_header_height">40dp</dimen>
+    <dimen name="standard_row_height">50dp</dimen>
+    <dimen name="edittext">45dp</dimen>
+
+    <dimen name="newsMoreTextSize">12sp</dimen>
+    <dimen name="form_app_bar_height">250dp</dimen>
+
+    <dimen name="spot_size">6dp</dimen>
+    <dimen name="title_margin">10dp</dimen>
+    <dimen name="title_padding">6dp</dimen>
+    <dimen name="progress_margin">24dp</dimen>
+    <dimen name="progress_width">250dp</dimen>
+</resources>
