@@ -77,15 +77,13 @@ open class Preferences : Parcelable {
         dest.writeInt(selectedColumnPosition)
     }
 
-    companion object {
-        val CREATOR: Parcelable.Creator<Preferences> = object : Parcelable.Creator<Preferences> {
-            override fun createFromParcel(`in`: Parcel): Preferences {
-                return Preferences(`in`)
-            }
+    companion object CREATOR : Parcelable.Creator<Preferences> {
+        override fun createFromParcel(parcel: Parcel): Preferences {
+            return Preferences(parcel)
+        }
 
-            override fun newArray(size: Int): Array<Preferences?> {
-                return arrayOfNulls(size)
-            }
+        override fun newArray(size: Int): Array<Preferences?> {
+            return arrayOfNulls(size)
         }
     }
 }

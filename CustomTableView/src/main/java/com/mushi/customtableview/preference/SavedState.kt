@@ -30,30 +30,17 @@ import android.view.View
 /**
  * Created by Mushi on 4.03.2018.
  */
-class SavedState : View.BaseSavedState {
+
+class SavedState(superState: Parcelable?) : View.BaseSavedState(superState) {
     @JvmField
     var preferences: Preferences? = null
 
-    constructor(superState: Parcelable?) : super(superState)
-
-    private constructor(`in`: Parcel) : super(`in`) {
-        preferences = `in`.readParcelable(Preferences::class.java.classLoader)
-    }
+    //    private constructor(`in`: Parcel) : super(`in`) {
+//        preferences = `in`.readParcelable(Preferences::class.java.classLoader)
+//    }
 
     override fun writeToParcel(out: Parcel, flags: Int) {
         super.writeToParcel(out, flags)
         out.writeParcelable(preferences, flags)
-    }
-
-    companion object {
-        val CREATOR: Parcelable.Creator<SavedState> = object : Parcelable.Creator<SavedState> {
-            override fun createFromParcel(`in`: Parcel): SavedState {
-                return SavedState(`in`)
-            }
-
-            override fun newArray(size: Int): Array<SavedState?> {
-                return arrayOfNulls(size)
-            }
-        }
     }
 }

@@ -1,7 +1,10 @@
+import java.util.Base64
+
 plugins {
-    alias(libs.plugins.android.library)
-    alias(libs.plugins.kotlin.android)
+    id("com.android.library")
+    id("org.jetbrains.kotlin.android")
     id("maven-publish")
+    id("signing")
 }
 
 group = "io.github.mamomia"
@@ -13,12 +16,9 @@ android {
 
     defaultConfig {
         minSdk = 21
-
-        vectorDrawables {
-            useSupportLibrary = true
-        }
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        vectorDrawables.useSupportLibrary = true
     }
 
     buildTypes {
@@ -30,12 +30,27 @@ android {
             )
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
-    kotlinOptions {
-        jvmTarget = "17"
+
+    kotlin {
+        // This is deprecated
+        // jvmTarget = "17"
+
+        // ✅ Use compilerOptions instead
+        compilerOptions {
+            jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
+        }
+    }
+
+    publishing {
+        singleVariant("release") {
+            withSourcesJar()
+            withJavadocJar()
+        }
     }
 }
 
@@ -88,14 +103,19 @@ afterEvaluate {
         }
 
         repositories {
-            maven {
-                name = "mavenCentral"
-                url = uri("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
-                credentials {
-                    username = findProperty("centralUsername") as String?
-                    password = findProperty("centralToken") as String?
-                }
-            }
+            mavenLocal()
+            // Add remote Maven repo (like Sonatype) here if needed
         }
+    }
+
+    val signingKeyFile = file("private.key")
+    val signingKey = signingKeyFile.readText()
+    signing {
+        useInMemoryPgpKeys(
+            findProperty("signing.keyId") as String?,
+            signingKey,
+            findProperty("signing.password") as String?
+        )
+        sign(publishing.publications["release"])
     }
 }

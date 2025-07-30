@@ -37,9 +37,9 @@ import com.mushi.customtableview.holder.DataCellViewHolder
 import com.mushi.customtableview.holder.EditableCellViewHolder
 import com.mushi.customtableview.holder.RowHeaderViewHolder
 import com.mushi.customtableview.listener.CellTextChangeListener
+import com.mushi.customtableview.model.Cell
 import com.mushi.customtableview.model.ColumnHeader
 import com.mushi.customtableview.model.RowHeader
-import com.mushi.customtableview.model.Cell
 import com.mushi.customtableview.sort.SortState
 import com.mushi.customtableview.util.CustomTextWatcher
 
@@ -95,29 +95,16 @@ class TableViewAdapter :
             EDITABLE_CELL_TYPE -> {
                 val viewHolder = holder as EditableCellViewHolder
                 viewHolder.setCell(
-                    cellItemModel as Cell,
+                    cellItemModel,
                     object : CustomTextWatcher(columnPosition, rowPosition) {
-                        override fun beforeTextChanged(
-                            s: CharSequence,
-                            start: Int,
-                            count: Int,
-                            after: Int
-                        ) {
-                        }
-
-                        override fun onTextChanged(
-                            s: CharSequence,
-                            start: Int,
-                            before: Int,
-                            count: Int
-                        ) {
-                        }
-
-                        override fun afterTextChanged(s: Editable) {
+                        override fun textChanged(oldValue: String?, newValue: String?) {
+                            //Log.e("", "oldValue: " + oldValue + ", newValue: " + newValue);
                             if (tableCellListener != null) {
-                                val cursor = viewHolder.cellText.selectionStart
+                                var cursor: Int = viewHolder.cellText.selectionStart
+                                cursor = if (cursor > 0) cursor else 1
                                 tableCellListener!!.onColumnUpdated(
-                                    s.toString(),
+                                    oldValue,
+                                    newValue,
                                     column,
                                     row,
                                     cursor

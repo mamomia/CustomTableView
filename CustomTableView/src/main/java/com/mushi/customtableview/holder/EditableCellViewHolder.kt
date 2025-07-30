@@ -63,7 +63,8 @@ class EditableCellViewHolder(itemView: View) : AbstractViewHolder(itemView) {
 
         if (tableCell.inFocus) {
             cellText.requestFocus()
-            cellText.setSelection(tableCell.cursorPoint)
+            val safeCursorPosition = tableCell.cursorPoint.coerceIn(0, cellText.text.length)
+            cellText.setSelection(safeCursorPosition)
         }
     }
 }
