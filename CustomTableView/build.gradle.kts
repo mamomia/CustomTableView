@@ -1,8 +1,9 @@
-import java.util.Base64
+import com.vanniktech.maven.publish.AndroidSingleVariantLibrary
 
 plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
+    id("com.vanniktech.maven.publish") version "0.34.0"
     id("maven-publish")
     id("signing")
 }
@@ -37,19 +38,8 @@ android {
     }
 
     kotlin {
-        // This is deprecated
-        // jvmTarget = "17"
-
-        // ✅ Use compilerOptions instead
         compilerOptions {
             jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
-        }
-    }
-
-    publishing {
-        singleVariant("release") {
-            withSourcesJar()
-            withJavadocJar()
         }
     }
 }
@@ -64,58 +54,48 @@ dependencies {
 }
 
 afterEvaluate {
-    publishing {
-        publications {
-            create<MavenPublication>("release") {
-                from(components["release"])
+    extensions.configure<SigningExtension>("signing") {
+        useGpgCmd()
+        sign(publishing.publications)
+    }
+}
 
-                groupId = "io.github.mamomia"
-                artifactId = "customtableview"
-                version = "1.0.0"
+mavenPublishing {
 
-                pom {
-                    name.set("CustomTableView")
-                    description.set("A customizable table view for Android.")
-                    url.set("https://github.com/mamomia/CustomTableView")
+    publishToMavenCentral()
+    signAllPublications()
 
-                    licenses {
-                        license {
-                            name.set("The Apache License, Version 2.0")
-                            url.set("https://www.apache.org/licenses/LICENSE-2.0.txt")
-                        }
-                    }
+    configure(
+        AndroidSingleVariantLibrary(
+            variant = "release",
+            sourcesJar = true,
+            publishJavadocJar = true
+        )
+    )
 
-                    developers {
-                        developer {
-                            id.set("mamomia")
-                            name.set("Musharaf Islam")
-                            email.set("mushi.islam007@gmail.com")
-                        }
-                    }
-
-                    scm {
-                        url.set("https://github.com/mamomia/CustomTableView")
-                        connection.set("scm:git:git://github.com/mamomia/CustomTableView.git")
-                        developerConnection.set("scm:git:ssh://github.com/mamomia/CustomTableView.git")
-                    }
-                }
+    pom {
+        name.set("CustomTableView")
+        description.set("A custom table view library for Android.")
+        inceptionYear.set("2025")
+        url.set("https://github.com/mamomia/CustomTableView")
+        licenses {
+            license {
+                name.set("The Apache License, Version 2.0")
+                url.set("http://www.apache.org/licenses/LICENSE-2.0.txt")
+                distribution.set("repo")
             }
         }
-
-        repositories {
-            mavenLocal()
-            // Add remote Maven repo (like Sonatype) here if needed
+        developers {
+            developer {
+                id.set("mamomia")
+                name.set("Musharaf Islam")
+                url.set("https://github.com/mamomia")
+            }
         }
-    }
-
-    val signingKeyFile = file("private.key")
-    val signingKey = signingKeyFile.readText()
-    signing {
-        useInMemoryPgpKeys(
-            findProperty("signing.keyId") as String?,
-            signingKey,
-            findProperty("signing.password") as String?
-        )
-        sign(publishing.publications["release"])
+        scm {
+            url.set("https://github.com/mamomia/CustomTableView")
+            connection.set("scm:git:https://github.com/mamomia/CustomTableView.git")
+            developerConnection.set("scm:git:ssh://git@github.com/mamomia/CustomTableView.git")
+        }
     }
 }

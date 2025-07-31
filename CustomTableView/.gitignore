@@ -1,1 +1,4 @@
 /build
+/pub.key
+/private.key
+/privateKeysBackup.gpg
