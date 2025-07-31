@@ -61,7 +61,7 @@ implementation 'io.github.mamomia:customtableview:1.0.0'
 ```
 MIT License
 
-Copyright (c) 2021 Evren Coşkun
+Copyright (c) 2025 Musharaf Islam
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
