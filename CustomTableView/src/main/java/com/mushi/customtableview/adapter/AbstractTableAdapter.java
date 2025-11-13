@@ -121,6 +121,49 @@ public abstract class AbstractTableAdapter<CH, RH, C> implements ITableAdapter<C
         dispatchCellDataSetChangesToListeners(mCellItems);
     }
 
+    public void updateSingleRowItems(@Nullable RH rowHeaderItem, @Nullable List<C> cellItems, int rowIndex) {
+        if (cellItems == null || rowHeaderItem == null) return;
+        if (mTableView == null) return;
+
+        if (rowIndex < mRowHeaderItems.size()) {
+            mRowHeaderItems.set(rowIndex, rowHeaderItem);
+        } else {
+            mRowHeaderItems.add(rowHeaderItem);
+        }
+
+        if (rowIndex < mCellItems.size()) {
+            mCellItems.set(rowIndex, cellItems);
+        } else {
+            mCellItems.add(cellItems);
+        }
+
+        if (mRowHeaderRecyclerViewAdapter != null) {
+            mRowHeaderRecyclerViewAdapter.setItems(mRowHeaderItems, false);
+        }
+
+        if (mCellRecyclerViewAdapter != null) {
+            mCellRecyclerViewAdapter.setItems(mCellItems, false);
+        }
+
+        mTableView.getCellRecyclerView().post(() -> {
+            try {
+                mTableView.getCellLayoutManager().clearCachedWidths();
+                mTableView.getColumnHeaderLayoutManager().clearCachedWidths();
+
+                // Refresh only the changed row visually
+                mRowHeaderRecyclerViewAdapter.notifyItemChanged(rowIndex);
+                mCellRecyclerViewAdapter.notifyItemChanged(rowIndex);
+
+                // Notify listeners
+                dispatchRowHeaderDataSetChangesToListeners(mRowHeaderItems);
+                dispatchCellDataSetChangesToListeners(mCellItems);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
     public void setAllItems(
             @Nullable List<CH> columnHeaderItems,
             @Nullable List<RH> rowHeaderItems,

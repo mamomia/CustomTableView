@@ -47,6 +47,10 @@
     <color name="blue_semi_transparent">#805677fc</color>
     <color name="blue_semi_transparent_pressed">#80738ffe</color>
 
+    <!-- FOR TABLE CELL HEADER -->
+    <color name="cell_header_def_color">@color/colorPrimary</color>
+    <color name="cell_header_active_color">@color/success</color>
+    <color name="cell_header_deactive_color">@color/error</color>
     <color name="cell_color">#009688</color>
 
     <color name="header_background_color">@color/colorPrimary</color>

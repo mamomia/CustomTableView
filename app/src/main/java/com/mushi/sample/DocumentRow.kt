@@ -4,8 +4,13 @@ import android.text.InputType
 import com.mushi.customtableview.annotation.CellFieldType
 import com.mushi.customtableview.annotation.ColumnIgnore
 import com.mushi.customtableview.annotation.ColumnPosition
+import com.mushi.customtableview.annotation.ColumnStatus
 
 class DocumentRow {
+
+//    @ColumnStatus
+//    var rowStatus: Boolean = false
+
     @ColumnIgnore
     var ItemCode: String = ""
 
@@ -61,6 +66,9 @@ class DocumentRow {
     @ColumnPosition(value = 8, heading = "Total")
     var LineTotal: Double = 0.0
 
-    @ColumnPosition(value = 9, heading = "Delete", columnType = CellFieldType.Action)
+    @ColumnPosition(value = 9, heading = "Active", columnType = CellFieldType.CheckBox)
+    var isActive: Boolean = false
+
+    @ColumnPosition(value = 10, heading = "Delete", columnType = CellFieldType.Action)
     var ActionDelete: Int = R.drawable.ic_delete
 }

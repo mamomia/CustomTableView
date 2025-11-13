@@ -23,6 +23,7 @@
  */
 package com.mushi.customtableview.holder
 
+import android.text.InputType
 import android.view.View
 import android.view.View.OnFocusChangeListener
 import android.widget.EditText
@@ -30,6 +31,7 @@ import android.widget.LinearLayout
 import com.mushi.customtableview.R
 import com.mushi.customtableview.model.Cell
 import com.mushi.customtableview.adapter.recyclerview.holder.AbstractViewHolder
+import com.mushi.customtableview.model.NoMenuEditText
 import com.mushi.customtableview.util.CustomTextWatcher
 
 
@@ -37,12 +39,12 @@ import com.mushi.customtableview.util.CustomTextWatcher
  * Created by Mushi on 23/10/2017.
  */
 class EditableCellViewHolder(itemView: View) : AbstractViewHolder(itemView) {
-    public val cellText: EditText = itemView.findViewById(R.id.cell_data)
+    val cellText: NoMenuEditText = itemView.findViewById(R.id.cell_data)
     private val cellContainer: LinearLayout = itemView.findViewById(R.id.cell_container)
 
     fun setCell(tableCell: Cell?, watcher: CustomTextWatcher?) {
-        cellText.setRawInputType(tableCell!!.inputType)
-        cellText.setText(tableCell.data.toString())
+        cellText.setRawInputType(tableCell?.inputType ?: InputType.TYPE_CLASS_TEXT)
+        cellText.setText(tableCell?.data.toString())
 
         // If your TableView should have auto resize for cells & columns.
         // Then you should consider the below lines. Otherwise, you can ignore them.
@@ -58,12 +60,12 @@ class EditableCellViewHolder(itemView: View) : AbstractViewHolder(itemView) {
                 } else {
                     cellText.removeTextChangedListener(watcher)
                 }
-                tableCell.inFocus = hasFocus
+                tableCell?.inFocus = hasFocus
             }
 
-        if (tableCell.inFocus) {
+        if (tableCell?.inFocus ?: false) {
             cellText.requestFocus()
-            val safeCursorPosition = tableCell.cursorPoint.coerceIn(0, cellText.text.length)
+            val safeCursorPosition = tableCell.cursorPoint.coerceIn(0, cellText.text?.length ?: 0)
             cellText.setSelection(safeCursorPosition)
         }
     }

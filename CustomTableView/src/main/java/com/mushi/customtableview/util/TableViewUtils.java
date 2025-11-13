@@ -26,6 +26,8 @@ package com.mushi.customtableview.util;
 
 import static java.util.stream.Collectors.toList;
 
+import android.content.Context;
+import android.graphics.Color;
 import android.os.Build;
 import android.text.method.PasswordTransformationMethod;
 import android.view.View;
@@ -33,9 +35,11 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.mushi.customtableview.R;
 import com.mushi.customtableview.annotation.CellFieldType;
 import com.mushi.customtableview.annotation.ColumnIgnore;
 import com.mushi.customtableview.annotation.ColumnPosition;
+import com.mushi.customtableview.annotation.ColumnStatus;
 import com.mushi.customtableview.model.ColumnHeader;
 import com.mushi.customtableview.model.RowHeader;
 import com.mushi.customtableview.model.Cell;
@@ -81,7 +85,11 @@ public class TableViewUtils {
                     int inputType = field.getAnnotation(ColumnPosition.class).inputType();
 
                     if (!field.isAnnotationPresent(ColumnIgnore.class) && columnType != null &&
-                            (columnType == CellFieldType.Data || columnType == CellFieldType.Action || columnType == CellFieldType.Editable)
+                            (columnType == CellFieldType.Data ||
+                                    columnType == CellFieldType.Action ||
+                                    columnType == CellFieldType.Editable ||
+                                    columnType == CellFieldType.CheckBox
+                            )
                     ) {
                         field.setAccessible(true);
                         Object text = field.get(item);
@@ -113,7 +121,8 @@ public class TableViewUtils {
                 if (!field.isAnnotationPresent(ColumnIgnore.class) && columnType != null &&
                         (columnType == CellFieldType.Data ||
                                 columnType == CellFieldType.Action ||
-                                columnType == CellFieldType.Editable)
+                                columnType == CellFieldType.Editable ||
+                                columnType == CellFieldType.CheckBox)
                 ) {
                     field.setAccessible(true);
                     Object text = field.get(item);
@@ -129,10 +138,48 @@ public class TableViewUtils {
     }
 
     @NonNull
-    public static List<RowHeader> getRowHeaderList(int rowSize) {
+    public static <T> RowHeader getRowHeader(Context context, T item, Class<T> clazz, int position) {
+        RowHeader header = new RowHeader(String.valueOf((position + 1)), String.valueOf((position + 1)), resolveRowHeaderColor(context, null));
+        // check if has status column
+        Field[] fields = clazz.getDeclaredFields();
+        for (Field field : fields) {
+            if (field.isAnnotationPresent(ColumnStatus.class)) {
+                field.setAccessible(true);
+                try {
+                    Object text = field.get(item);
+                    header.setBackgroundColor(resolveRowHeaderColor(context,
+                            ((text.toString().equalsIgnoreCase("true")) ? "cell_header_active_color" : "cell_header_deactive_color")
+                    ));
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+                break;
+            }
+        }
+        return header;
+    }
+
+    @NonNull
+    public static <T> List<RowHeader> getRowHeaderList(Context context, Class<T> clazz, List<T> dataList) {
         List<RowHeader> list = new ArrayList<>();
-        for (int i = 1; i <= rowSize; i++) {
-            RowHeader header = new RowHeader(String.valueOf(i), "" + i);
+        for (int i = 0; i < dataList.size(); i++) {
+            RowHeader header = new RowHeader(String.valueOf((i + 1)), String.valueOf((i + 1)), resolveRowHeaderColor(context, null));
+            // check if has status column
+            Field[] fields = clazz.getDeclaredFields();
+            for (Field field : fields) {
+                if (field.isAnnotationPresent(ColumnStatus.class)) {
+                    field.setAccessible(true);
+                    try {
+                        Object text = field.get(dataList.get(i));
+                        header.setBackgroundColor(resolveRowHeaderColor(context,
+                                ((text.toString().equalsIgnoreCase("true")) ? "cell_header_active_color" : "cell_header_deactive_color")
+                        ));
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                    break;
+                }
+            }
             list.add(header);
         }
         return list;
@@ -151,7 +198,7 @@ public class TableViewUtils {
             Field field = fields.get(i - 1);
             CellFieldType columnType = field.getAnnotation(ColumnPosition.class).columnType();
             if (!field.isAnnotationPresent(ColumnIgnore.class) && columnType != null &&
-                    (columnType == CellFieldType.Data || columnType == CellFieldType.Action || columnType == CellFieldType.Editable)) {
+                    (columnType == CellFieldType.Data || columnType == CellFieldType.Action || columnType == CellFieldType.Editable || columnType == CellFieldType.CheckBox)) {
                 if (!showActionColumns && columnType == CellFieldType.Action)
                     continue;
 
@@ -199,6 +246,32 @@ public class TableViewUtils {
             ex.printStackTrace();
         }
         return false;
+    }
+
+    public static int resolveRowHeaderColor(Context context, String colorName) {
+        try {
+            if (colorName == null || colorName.isEmpty()) colorName = "cell_header_def_color";
+            // Try to get the color ID dynamically — allows override from app if same name exists
+            int colorResId = context.getResources()
+                    .getIdentifier(colorName, "color", context.getPackageName());
+
+            // If not found in app, fallback to library resource
+            if (colorResId == 0 && colorName.equals("cell_header_def_color")) {
+                colorResId = R.color.cell_header_def_color;
+            } else if (colorResId == 0 && colorName.equals("cell_header_active_color")) {
+                colorResId = R.color.cell_header_active_color;
+            } else if (colorResId == 0 && colorName.equals("cell_header_deactive_color")) {
+                colorResId = R.color.cell_header_deactive_color;
+            }
+
+            // Convert to actual color int
+            return context.getColor(colorResId);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            // Fallback to a safe default color (e.g., light gray)
+            return Color.LTGRAY;
+        }
     }
 
     public interface Predicate<T> {

@@ -74,7 +74,6 @@ public abstract class AbstractRecyclerViewAdapter<T> extends RecyclerView
 
     public void setItems(@NonNull List<T> itemList) {
         mItemList = new ArrayList<>(itemList);
-
         this.notifyDataSetChanged();
     }
 

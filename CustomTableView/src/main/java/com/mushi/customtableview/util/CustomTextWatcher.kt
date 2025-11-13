@@ -2,6 +2,7 @@ package com.mushi.customtableview.util
 
 import android.text.Editable
 import android.text.TextWatcher
+import android.widget.CompoundButton
 
 abstract class CustomTextWatcher(var column: Int, var row: Int) : TextWatcher {
     private var oldValue = ""
@@ -20,5 +21,16 @@ abstract class CustomTextWatcher(var column: Int, var row: Int) : TextWatcher {
     }
 
     open fun textChanged(oldValue: String?, newValue: String?) {
+    }
+}
+
+abstract class CustomCheckedWatcher(var column: Int, var row: Int) :
+    CompoundButton.OnCheckedChangeListener {
+
+    override fun onCheckedChanged(buttonView: CompoundButton, isChecked: Boolean) {
+        checkedChanged(isChecked)
+    }
+
+    open fun checkedChanged(isChecked: Boolean) {
     }
 }

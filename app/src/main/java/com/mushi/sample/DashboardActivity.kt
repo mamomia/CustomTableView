@@ -16,6 +16,7 @@ import com.mushi.customtableview.util.TableViewUtils.getCell
 import com.mushi.customtableview.util.TableViewUtils.getCellList
 import com.mushi.customtableview.util.TableViewUtils.getColumnHeaderList
 import com.mushi.customtableview.util.TableViewUtils.getRowHeaderList
+import com.mushi.customtableview.util.TableViewUtils.getRowHeader
 import com.mushi.sample.databinding.ActivityDashboardBinding
 
 class DashboardActivity : AppCompatActivity() {
@@ -40,8 +41,10 @@ class DashboardActivity : AppCompatActivity() {
 
         for (i in 0 until 50) {
             val item = DocumentRow()
+            //item.rowStatus = ((i % 2) == 0)
             item.ItemCode = "ItemCode-$i"
             item.ItemDescription = "Item Description - $i"
+            item.isActive = ((i % 2) == 0)
             selectedListOfItems.add(item)
         }
         initItemsListing(
@@ -49,6 +52,7 @@ class DashboardActivity : AppCompatActivity() {
             selectedListOfItems,
             DocumentRow::class.java
         )
+        resizeTableView()
     }
 
     private fun <T> initItemsListing(tableView: TableView?, rowsList: List<T>, clazz: Class<T>?) {
@@ -63,7 +67,7 @@ class DashboardActivity : AppCompatActivity() {
                         column: Int,
                         row: Int
                     ) {
-                        if (column == 8) {
+                        if (column == 9) {
                             selectedListOfItems.removeAt(row)
                             updateItemsListing()
                         }
@@ -85,24 +89,34 @@ class DashboardActivity : AppCompatActivity() {
                 ) {
                     if (newData.isNullOrEmpty()) return
 
-                    if (column == 0) {
-                        selectedListOfItems[row].ItemDescription = newData
-                    } else if (column == 2) {
-                        selectedListOfItems[row].WhsQty =
-                            AppUtility.round(AppUtility.parseDouble(newData), 2)
-                    } else if (column == 3) {
-                        selectedListOfItems[row].Quantity =
-                            AppUtility.round(AppUtility.parseDouble(newData), 2)
-                        selectedListOfItems[row].Dozen =
-                            AppUtility.round((selectedListOfItems[row].Quantity / 12), 2)
-                    } else if (column == 4) {
-                        selectedListOfItems[row].Dozen =
-                            AppUtility.round(AppUtility.parseDouble(newData), 2)
-                        selectedListOfItems[row].Quantity =
-                            AppUtility.round((selectedListOfItems[row].Dozen * 12), 2)
-                    } else if (column == 6) {
-                        selectedListOfItems[row].UnitPrice =
-                            AppUtility.round(AppUtility.parseDouble(newData), 2)
+                    when (column) {
+                        0 -> {
+                            selectedListOfItems[row].ItemDescription = newData
+                        }
+
+                        2 -> {
+                            selectedListOfItems[row].WhsQty =
+                                AppUtility.round(AppUtility.parseDouble(newData), 2)
+                        }
+
+                        3 -> {
+                            selectedListOfItems[row].Quantity =
+                                AppUtility.round(AppUtility.parseDouble(newData), 2)
+                            selectedListOfItems[row].Dozen =
+                                AppUtility.round((selectedListOfItems[row].Quantity / 12), 2)
+                        }
+
+                        4 -> {
+                            selectedListOfItems[row].Dozen =
+                                AppUtility.round(AppUtility.parseDouble(newData), 2)
+                            selectedListOfItems[row].Quantity =
+                                AppUtility.round((selectedListOfItems[row].Dozen * 12), 2)
+                        }
+
+                        6 -> {
+                            selectedListOfItems[row].UnitPrice =
+                                AppUtility.round(AppUtility.parseDouble(newData), 2)
+                        }
                     }
 
                     selectedListOfItems[row].LineTotal = AppUtility.round(
@@ -112,6 +126,12 @@ class DashboardActivity : AppCompatActivity() {
                     selectedListOfItems[row].Tax = 0.0
 
                     tableViewAdapter!!.updateSingleRow(
+                        getRowHeader(
+                            this@DashboardActivity,
+                            selectedListOfItems[row],
+                            DocumentRow::class.java,
+                            row
+                        ),
                         getCell(
                             selectedListOfItems[row],
                             DocumentRow::class.java,
@@ -122,14 +142,42 @@ class DashboardActivity : AppCompatActivity() {
                     )
                     resizeTableView()
                 }
+
+                override fun onColumnUpdated(
+                    isChecked: Boolean?,
+                    column: Int,
+                    row: Int
+                ) {
+                    if (isChecked == null) return
+                    when (column) {
+                        8 -> {
+                            selectedListOfItems[row].isActive = isChecked
+                        }
+                    }
+                    tableViewAdapter!!.updateSingleRow(
+                        getRowHeader(
+                            this@DashboardActivity,
+                            selectedListOfItems[row],
+                            DocumentRow::class.java,
+                            row
+                        ),
+                        getCell(
+                            selectedListOfItems[row],
+                            DocumentRow::class.java,
+                            (column + 1)
+                        ),
+                        row
+                    )
+                    resizeTableView()
+                }
             })
         }
         tableViewAdapter!!.setAllItems(
             getColumnHeaderList(clazz),
-            getRowHeaderList(rowsList.size),
+            getRowHeaderList(this, clazz, rowsList),
             getCellList(rowsList, clazz)
         )
-        binding!!.tableView.post { tableViewAdapter!!.notifyDataSetChanged() }
+        //binding!!.tableView.post { tableViewAdapter!!.notifyDataSetChanged() }
     }
 
     private fun updateItemsListing() {

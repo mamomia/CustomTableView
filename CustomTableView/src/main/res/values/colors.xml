@@ -70,6 +70,9 @@
     <color name="table_view_default_selected_background_color">#fada65</color>
     <color name="table_view_default_shadow_background_color">#f2f2f2</color>
 
+    <color name="cell_header_def_color">@color/colorPrimary</color>
+    <color name="cell_header_active_color">#008000</color>
+    <color name="cell_header_deactive_color">#fa2759</color>
     <color name="cell_color">#009688</color>
 
     <color name="header_background_color">@color/colorPrimary</color>

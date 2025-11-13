@@ -24,6 +24,7 @@
 package com.mushi.customtableview.holder
 
 import android.view.View
+import android.widget.LinearLayout
 import android.widget.TextView
 import com.mushi.customtableview.R
 import com.mushi.customtableview.adapter.recyclerview.holder.AbstractViewHolder
@@ -35,4 +36,8 @@ class RowHeaderViewHolder(itemView: View) : AbstractViewHolder(itemView) {
     @JvmField
     val row_header_textview: TextView =
         itemView.findViewById(R.id.row_header_textview)
+
+    @JvmField
+    val row_header_layout: LinearLayout =
+        itemView.findViewById(R.id.row_header_container)
 }

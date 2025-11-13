@@ -40,7 +40,7 @@ class DataCellViewHolder(itemView: View) : AbstractViewHolder(itemView) {
         itemView.findViewById(R.id.cell_container)
 
     fun setCell(tableCell: Cell?) {
-        cell_text.text = tableCell!!.data.toString()
+        cell_text.text = tableCell?.data.toString()
 
         // If your TableView should have auto resize for cells & columns.
         // Then you should consider the below lines. Otherwise, you can ignore them.

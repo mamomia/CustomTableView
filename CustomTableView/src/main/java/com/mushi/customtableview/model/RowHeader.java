@@ -24,15 +24,28 @@
 
 package com.mushi.customtableview.model;
 
+import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-/**
- * Created by mushi on 11/06/2017.
- */
+import com.mushi.customtableview.R;
 
 public class RowHeader extends Cell {
-    public RowHeader(@NonNull String id, @Nullable String data) {
+
+    @ColorInt
+    private int backgroundColor = R.color.cell_header_def_color;
+
+    public RowHeader(@NonNull String id, @Nullable String data, int backgroundColor) {
         super(id, data);
+        this.backgroundColor = backgroundColor;
+    }
+
+    @ColorInt
+    public int getBackgroundColor() {
+        return backgroundColor;
+    }
+
+    public void setBackgroundColor(@ColorInt int backgroundColor) {
+        this.backgroundColor = backgroundColor;
     }
 }

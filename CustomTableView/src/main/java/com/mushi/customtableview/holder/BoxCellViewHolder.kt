@@ -24,28 +24,25 @@
 package com.mushi.customtableview.holder
 
 import android.view.View
-import android.widget.ImageView
-import android.widget.LinearLayout
+import android.widget.CheckBox
 import com.mushi.customtableview.R
 import com.mushi.customtableview.adapter.recyclerview.holder.AbstractViewHolder
 import com.mushi.customtableview.model.Cell
+import com.mushi.customtableview.util.CustomCheckedWatcher
 
-class ActionCellViewHolder(itemView: View) : AbstractViewHolder(itemView) {
-    val cell_image: ImageView =
-        itemView.findViewById(R.id.cell_image)
-    private val cell_container: LinearLayout =
-        itemView.findViewById(R.id.cell_container)
+/**
+ * Created by Mushi on 23/10/2017.
+ */
+class BoxCellViewHolder(itemView: View) : AbstractViewHolder(itemView) {
+    private val cell_view: CheckBox =
+        itemView.findViewById(R.id.cell_data)
 
-    fun setCell(tableCell: Cell?) {
+    fun setCell(tableCell: Cell?, watcher: CustomCheckedWatcher?) {
         try {
-            val actionIcon = tableCell?.data as Int
-            cell_image.setImageResource(actionIcon)
-        } catch (e: Exception) {
-            e.printStackTrace()
+            cell_view.isChecked = tableCell?.data.toString().toBoolean()
+            cell_view.setOnCheckedChangeListener(watcher)
+        } catch (ex: Exception) {
+            ex.printStackTrace()
         }
-    }
-
-    companion object {
-        private val TAG: String = ActionCellViewHolder::class.java.simpleName
     }
 }
