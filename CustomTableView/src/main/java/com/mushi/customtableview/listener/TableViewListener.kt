@@ -23,6 +23,7 @@
  */
 package com.mushi.customtableview.listener
 
+import android.util.Log
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.mushi.customtableview.TableView
@@ -154,6 +155,7 @@ class TableViewListener(
     }
 
     private fun showToast(message: String) {
-        Toast.makeText(mContext, message, Toast.LENGTH_SHORT).show()
+        //Toast.makeText(mContext, message, Toast.LENGTH_SHORT).show()
+        Log.d("TableView", message)
     }
 }

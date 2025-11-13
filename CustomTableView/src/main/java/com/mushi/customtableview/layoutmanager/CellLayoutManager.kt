@@ -25,6 +25,7 @@ package com.mushi.customtableview.layoutmanager
 
 import android.content.Context
 import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.util.SparseArray
 import android.util.SparseIntArray
@@ -124,9 +125,9 @@ class CellLayoutManager(context: Context, private val mTableView: ITableView) :
     fun fitWidthSize(position: Int, scrollingLeft: Boolean) {
         fitSize(position, IGNORE_LEFT, false)
 
-        if (mNeedSetLeft and scrollingLeft) {
-            // Works just like invoke later of swing utils.
-            val handler = Handler()
+        if (mNeedSetLeft && scrollingLeft) {
+            // Works just like invoke later of Swing utils.
+            val handler = Handler(Looper.getMainLooper())
             handler.post { fitWidthSize2(true) }
         }
     }
@@ -464,7 +465,8 @@ class CellLayoutManager(context: Context, private val mTableView: ITableView) :
         for (i in findFirstVisibleItemPosition()..<findLastVisibleItemPosition() + 1) {
             val cellRowRecyclerView = findViewByPosition(i) as CellRecyclerView?
 
-            val holder = cellRowRecyclerView?.findViewHolderForAdapterPosition(xPosition) as AbstractViewHolder?
+            val holder =
+                cellRowRecyclerView?.findViewHolderForAdapterPosition(xPosition) as AbstractViewHolder?
 
             viewHolders[index] = holder
 

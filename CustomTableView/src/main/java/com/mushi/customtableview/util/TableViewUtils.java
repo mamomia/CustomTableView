@@ -250,27 +250,30 @@ public class TableViewUtils {
 
     public static int resolveRowHeaderColor(Context context, String colorName) {
         try {
-            if (colorName == null || colorName.isEmpty()) colorName = "cell_header_def_color";
+            if (colorName == null || colorName.isEmpty()) {
+                colorName = "cell_header_def_color";
+            }
+
             // Try to get the color ID dynamically — allows override from app if same name exists
             int colorResId = context.getResources()
                     .getIdentifier(colorName, "color", context.getPackageName());
 
             // If not found in app, fallback to library resource
-            if (colorResId == 0 && colorName.equals("cell_header_def_color")) {
-                colorResId = R.color.cell_header_def_color;
-            } else if (colorResId == 0 && colorName.equals("cell_header_active_color")) {
-                colorResId = R.color.cell_header_active_color;
-            } else if (colorResId == 0 && colorName.equals("cell_header_deactive_color")) {
-                colorResId = R.color.cell_header_deactive_color;
+            if (colorResId == 0) {
+                colorResId = switch (colorName) {
+                    case "cell_header_active_color" -> R.color.cell_header_active_color;
+                    case "cell_header_deactive_color" -> R.color.cell_header_deactive_color;
+                    default -> R.color.cell_header_def_color;
+                };
             }
 
-            // Convert to actual color int
-            return context.getColor(colorResId);
+            // Safely get color for all API levels
+            return androidx.core.content.ContextCompat.getColor(context, colorResId);
 
         } catch (Exception e) {
             e.printStackTrace();
             // Fallback to a safe default color (e.g., light gray)
-            return Color.LTGRAY;
+            return android.graphics.Color.LTGRAY;
         }
     }
 

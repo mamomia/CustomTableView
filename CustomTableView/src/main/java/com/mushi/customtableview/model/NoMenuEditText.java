@@ -50,27 +50,29 @@ public class NoMenuEditText extends androidx.appcompat.widget.AppCompatEditText 
             }
         });
 
-        // Disable menu when cursor is placed (Paste popup)
-        setCustomInsertionActionModeCallback(new ActionMode.Callback() {
-            @Override
-            public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-                return false;
-            }
+        // Disable menu when cursor is placed (Paste popup) — API 23+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+            setCustomInsertionActionModeCallback(new ActionMode.Callback() {
+                @Override
+                public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+                    return false;
+                }
 
-            @Override
-            public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-                return false;
-            }
+                @Override
+                public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+                    return false;
+                }
 
-            @Override
-            public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-                return false;
-            }
+                @Override
+                public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+                    return false;
+                }
 
-            @Override
-            public void onDestroyActionMode(ActionMode mode) {
-            }
-        });
+                @Override
+                public void onDestroyActionMode(ActionMode mode) {
+                }
+            });
+        }
     }
 
     @Override

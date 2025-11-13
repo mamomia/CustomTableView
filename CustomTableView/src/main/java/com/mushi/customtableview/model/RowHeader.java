@@ -33,7 +33,7 @@ import com.mushi.customtableview.R;
 public class RowHeader extends Cell {
 
     @ColorInt
-    private int backgroundColor = R.color.cell_header_def_color;
+    private int backgroundColor;
 
     public RowHeader(@NonNull String id, @Nullable String data, int backgroundColor) {
         super(id, data);
